@@ -23,12 +23,6 @@
 **Priority:** {{epic.priority}}
 **Total Points:** {{epic.total_points}}
 
-### Flow Diagram
-
-```mermaid
-{{epic.flow_diagram}}
-```
-
 {{#each epic.stories}}
 
 ### {{story.id}}: {{story.title}}
@@ -54,13 +48,5 @@
 {{#each story.definition_of_done}}
 - [ ] {{item}}
 {{/each}}
-
-{{/each}}
-
-### UI Mockup
-
-```
-{{epic.ascii_wireframe}}
-```
 
 {{/each}}

@@ -13,7 +13,7 @@ Extract the 2 Mermaid diagrams from the proposal deliverable and render them as 
 
 1. Look for the proposal deliverable:
    - `docs/architect/deliverables/proposal/proposal.md` (or custom output_dir from fa-context.json)
-2. If not found: "No proposal found. Run `/architect:proposal` or `/architect:full` first." Then stop.
+2. If not found: "No proposal found. Run `/architect:proposal` or `/architect:full-proposal` first." Then stop.
 
 ## Parse Arguments
 

@@ -14,7 +14,7 @@ Export each architect deliverable independently as professionally styled corpora
 1. Look for generated deliverables in `docs/architect/deliverables/` (or custom output_dir from fa-context.json):
    - `fa-context.json` — required (in `docs/architect/`)
    - `deliverables/proposal/proposal.md`, `deliverables/stories/stories.md`, `deliverables/techstack/techstack.md`, `deliverables/todo/todo.md` — at least one required
-2. If no deliverables found: "No deliverables found. Run `/architect:full` or individual skills first." Then stop.
+2. If no deliverables found: "No deliverables found. Run `/architect:full-proposal` or individual skills first." Then stop.
 3. Check if `docs/architect/diagrams/` exists and has images. If not, run the diagrams skill logic first to render the Mermaid diagrams as images before proceeding.
 
 ## Parse Arguments
@@ -206,7 +206,6 @@ tr:hover { background-color: #EBF4FF; }
 code, pre {
     font-family: 'Fira Code', 'Consolas', monospace;
     background-color: #F5F5F5;
-    border-radius: 4px;
 }
 
 code { padding: 0.2rem 0.4rem; font-size: 0.9rem; }
@@ -227,7 +226,6 @@ pre {
     max-width: 100%;
     height: auto;
     border: 1px solid #E2E8F0;
-    border-radius: 4px;
     padding: 1rem;
     background: white;
 }
@@ -242,7 +240,6 @@ pre {
 .badge {
     display: inline-block;
     padding: 0.15rem 0.5rem;
-    border-radius: 4px;
     font-size: 0.8rem;
     font-weight: 600;
     font-family: 'Source Sans Pro', sans-serif;

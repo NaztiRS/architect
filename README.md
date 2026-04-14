@@ -143,7 +143,9 @@ docs/architect/
 ├── README.md
 ├── diagrams/
 │   ├── architecture-overview.svg
-│   └── proposal-timeline.svg
+│   ├── architecture-overview.png
+│   ├── proposal-timeline.svg
+│   └── proposal-timeline.png
 ├── prototype/
 │   ├── index.html
 │   └── pages/

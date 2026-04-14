@@ -40,11 +40,10 @@ const puppeteer = require('puppeteer');
   await page.goto('file://' + htmlPath, { waitUntil: 'networkidle0', timeout: 60000 });
   await page.pdf({
     path: pdfPath,
-    width: '900px',
-    height: '1270px',
+    format: 'A4',
     printBackground: true,
     displayHeaderFooter: false,
-    margin: { top: '0', bottom: '0', left: '0', right: '0' }
+    margin: { top: '20mm', bottom: '20mm', left: '15mm', right: '15mm' }
   });
   await browser.close();
   console.log('PDF generated: ' + pdfPath);

@@ -2,6 +2,9 @@
 name: full-proposal
 description: Run the complete architect pipeline — analyze requirements, generate technical proposal, user stories, tech stack analysis, work plan, HTML prototype, and export all deliverables. Accepts a requirements document or starts interactive Q&A.
 argument-hint: "[ruta-documento] [--no-review] [--lang en|es]"
+allowed-tools: "Read Write Bash Glob Agent"
+context: fork
+effort: high
 ---
 
 ## Your Mission
