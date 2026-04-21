@@ -83,8 +83,8 @@
     "timeline": "3 months to MVP",
     "team_size": 3,
     "existing_stack": [],
-    "mandatory_tech": ["TypeScript"],
-    "excluded_tech": ["PHP", "jQuery"]
+    "mandatory_tech": [],
+    "excluded_tech": []
   },
   "integrations": [
     {

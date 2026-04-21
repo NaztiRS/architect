@@ -10,7 +10,6 @@ Transform project requirements into enterprise-grade documentation and navigable
 |------------|----------|-------------|
 | **Technical Proposal** | Client / Direction | Architecture, risks, timeline, functional modules |
 | **User Stories** | Developers / Scrum Master | Epics, acceptance criteria (Given/When/Then), story points, MoSCoW, traceability |
-| **Tech Stack Analysis** | Technical Team / CTO | Weighted scoring comparison per layer, recommendation with justification |
 | **Work Plan** | PM / Tech Lead | Phases, tasks, dependencies, milestones, Gantt chart |
 | **HTML Prototype** | Everyone | Navigable, responsive screens built with Tailwind CSS — zero dependencies |
 
@@ -52,7 +51,6 @@ That runs the full pipeline. Or start with a specific document:
 | `/architect:analyze` | Extract requirements from document or interactive Q&A |
 | `/architect:proposal` | Generate technical proposal |
 | `/architect:stories` | Generate user stories (enterprise level) |
-| `/architect:techstack` | Tech stack recommendation with scoring |
 | `/architect:todo` | Work plan with Gantt chart |
 | `/architect:prototype` | Navigable HTML prototype |
 | `/architect:diagrams` | Render Mermaid diagrams as SVG/PNG |
@@ -105,14 +103,11 @@ Two agents work simultaneously:
 
 A review checkpoint lets you adjust both before moving on.
 
-### Step 3: Tech Stack + Prototype (Parallel)
+### Step 3: Prototype
 
-Two more agents work simultaneously:
-
-- **solution-architect** generates the **Tech Stack Analysis** — evaluating 2-3 candidates per layer (frontend, backend, database, infrastructure, testing, CI/CD) with a weighted scoring table (scalability 25%, learning curve 15%, community 15%, cost 20%, fit 25%). If you specified an existing stack, it validates your choices instead of recommending from scratch.
 - **ux-designer** generates the **HTML Prototype** — mapping user stories to screens, creating a navigable prototype with Tailwind CSS (via CDN). Every page has working navigation, realistic sample data, responsive design, and consistent styling. Zero dependencies — open `index.html` in any browser.
 
-Another review checkpoint before continuing.
+A review checkpoint lets you adjust before moving on.
 
 ### Step 4: Work Plan
 
@@ -142,8 +137,8 @@ Preflight (Node.js? Chrome? Install tools)
    analyze → fa-context.json
        |
    proposal  ──parallel──  stories
-       |                      |
-   techstack ──parallel──  prototype
+       |
+      prototype
        |
       todo
        |
@@ -174,10 +169,6 @@ docs/architect/
     │   ├── stories.md
     │   ├── stories.docx
     │   └── stories.pdf
-    ├── techstack/
-    │   ├── techstack.md
-    │   ├── techstack.docx
-    │   └── techstack.pdf
     └── todo/
         ├── todo.md
         ├── todo.docx
@@ -191,7 +182,7 @@ The plugin uses 4 specialized agents, each with domain expertise defined in thei
 | Agent | Role | Skills | What It Does |
 |-------|------|--------|-------------|
 | `business-analyst` | Requirements expert | analyze, stories | Extracts requirements from documents or Q&A. Detects gaps and implicit assumptions. Writes acceptance criteria in Given/When/Then. Assigns MoSCoW priorities and story points. Never assumes — asks precise questions when info is missing. |
-| `solution-architect` | Architecture expert | proposal, techstack | Designs scalable architectures. Evaluates tech stacks with objective scoring. Produces Mermaid diagrams. Justifies every technical decision with trade-offs. Scales complexity to the project. |
+| `solution-architect` | Architecture expert | proposal | Designs scalable architectures. Produces Mermaid diagrams. Justifies every technical decision with trade-offs. Scales complexity to the project. |
 | `ux-designer` | Prototyping expert | prototype | Maps user stories to screens. Creates navigable HTML prototypes with Tailwind CSS. Uses realistic data from the project context. Ensures responsive design and consistent styling across all pages. |
 | `project-planner` | Planning expert | todo | Decomposes projects into phases and tasks. Estimates effort realistically (with 20-30% padding). Identifies dependencies and critical path. Creates Gantt charts and prioritized checklists. |
 

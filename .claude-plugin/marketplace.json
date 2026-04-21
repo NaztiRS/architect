@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "architect",
-      "description": "Functional Analysis & Technical Proposal generator. Generates user stories, tech stack analysis, work plans, navigable HTML prototypes, and professional corporate documents (PDF/DOCX) with rendered diagrams.",
+      "description": "Functional Analysis & Technical Proposal generator. Generates user stories, work plans, navigable HTML prototypes, and professional corporate documents (PDF/DOCX) with rendered diagrams.",
       "source": "./",
       "category": "development",
       "version": "1.0.0",

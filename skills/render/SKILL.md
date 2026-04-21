@@ -7,13 +7,13 @@ allowed-tools: "Read Write Bash Glob"
 
 ## Your Mission
 
-Export each architect deliverable independently as professionally styled corporate documents. Each deliverable (proposal, stories, techstack, todo) is rendered in its own folder with DOCX and PDF alongside the source .md.
+Export each architect deliverable independently as professionally styled corporate documents. Each deliverable (proposal, stories, todo) is rendered in its own folder with DOCX and PDF alongside the source .md.
 
 ## Prerequisites
 
 1. Look for generated deliverables in `docs/architect/deliverables/` (or custom output_dir from fa-context.json):
    - `fa-context.json` — required (in `docs/architect/`)
-   - `deliverables/proposal/proposal.md`, `deliverables/stories/stories.md`, `deliverables/techstack/techstack.md`, `deliverables/todo/todo.md` — at least one required
+   - `deliverables/proposal/proposal.md`, `deliverables/stories/stories.md`, `deliverables/todo/todo.md` — at least one required
 2. If no deliverables found: "No deliverables found. Run `/architect:deliver` or individual skills first." Then stop.
 3. Check if `docs/architect/diagrams/` exists and has images. If not, run the diagrams skill logic first to render the Mermaid diagrams as images before proceeding.
 
@@ -62,7 +62,7 @@ Every exported document must include:
 
 ## Rendering Pipeline
 
-For each deliverable that exists (proposal, stories, techstack, todo):
+For each deliverable that exists (proposal, stories, todo):
 
 1. Read the source `.md` from `deliverables/{name}/{name}.md`
 2. Generate DOCX using `docx` npm package (with corporate styling)
@@ -289,7 +289,6 @@ Run `generate-pdf.js` for each deliverable using the plugin's `bin/` directory:
 export PUPPETEER_EXECUTABLE_PATH="[Chrome path from preflight]"
 node [plugin-dir]/bin/generate-pdf.js "docs/architect/deliverables/proposal/temp-proposal.html" "docs/architect/deliverables/proposal/proposal.pdf" "ProjectName"
 node [plugin-dir]/bin/generate-pdf.js "docs/architect/deliverables/stories/temp-stories.html" "docs/architect/deliverables/stories/stories.pdf" "ProjectName"
-node [plugin-dir]/bin/generate-pdf.js "docs/architect/deliverables/techstack/temp-techstack.html" "docs/architect/deliverables/techstack/techstack.pdf" "ProjectName"
 node [plugin-dir]/bin/generate-pdf.js "docs/architect/deliverables/todo/temp-todo.html" "docs/architect/deliverables/todo/todo.pdf" "ProjectName"
 ```
 
@@ -319,7 +318,6 @@ Run for each deliverable:
 ```bash
 node [plugin-dir]/bin/generate-docx.js "docs/architect/deliverables/proposal/proposal.md" "docs/architect/deliverables/proposal/proposal.docx" "docs/architect/fa-context.json"
 node [plugin-dir]/bin/generate-docx.js "docs/architect/deliverables/stories/stories.md" "docs/architect/deliverables/stories/stories.docx" "docs/architect/fa-context.json"
-node [plugin-dir]/bin/generate-docx.js "docs/architect/deliverables/techstack/techstack.md" "docs/architect/deliverables/techstack/techstack.docx" "docs/architect/fa-context.json"
 node [plugin-dir]/bin/generate-docx.js "docs/architect/deliverables/todo/todo.md" "docs/architect/deliverables/todo/todo.docx" "docs/architect/fa-context.json"
 ```
 
@@ -362,7 +360,7 @@ const doc = new docx.Document({
             }
         }
     },
-    sections: [coverSection, tocSection, proposalSection, storiesSection, techstackSection, todoSection]
+    sections: [coverSection, tocSection, proposalSection, storiesSection, todoSection]
 });
 ```
 
@@ -525,7 +523,7 @@ If the `docx` package is NOT available:
 
 - **Use PNG for images, never SVG** — Word doesn't render SVG reliably
 - **Parse markdown into structured elements** — don't try to convert HTML. Read the .md files directly and map: `#` → Heading1, `##` → Heading2, `|...|` → Table, `- [ ]` → checkbox paragraph, etc.
-- **Page break between major sections** — use `new docx.PageBreak()` between proposal, stories, techstack, and todo sections
+- **Page break between major sections** — use `new docx.PageBreak()` between proposal, stories, and todo sections
 - **Consistent font: Calibri** — the corporate standard for Word documents
 - **Use the Write tool to create the script** — never heredocs
 
@@ -552,10 +550,6 @@ docs/architect/
 │   │   ├── proposal.md              # Source markdown
 │   │   ├── proposal.docx            # Word document
 │   │   └── proposal.pdf             # PDF document
-│   ├── techstack/
-│   │   ├── techstack.md
-│   │   ├── techstack.docx
-│   │   └── techstack.pdf
 │   ├── stories/
 │   │   ├── stories.md
 │   │   ├── stories.docx
@@ -582,7 +576,6 @@ Present a complete summary:
 > |-------------|-----|------|-----|
 > | Proposal | ✅ | ✅/❌ | ✅/❌ |
 > | Stories | ✅ | ✅/❌ | ✅/❌ |
-> | Tech Stack | ✅ | ✅/❌ | ✅/❌ |
 > | Work Plan | ✅ | ✅/❌ | ✅/❌ |
 >
 > Each deliverable is in its own folder under `docs/architect/deliverables/`."

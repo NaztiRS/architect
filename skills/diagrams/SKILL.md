@@ -39,7 +39,7 @@ Name each diagram descriptively based on its context:
 - `deliverables/proposal/proposal.md` → Section 3 (Architecture) → `architecture-overview`
 - `deliverables/proposal/proposal.md` → Section 9 (Timeline) → `proposal-timeline`
 
-Only these 2 diagrams should be extracted and rendered. Do NOT scan stories.md, techstack.md, or todo.md for diagrams.
+Only these 2 diagrams should be extracted and rendered. Do NOT scan stories.md or todo.md for diagrams.
 
 ## Step 2: Detect Rendering Tool & Configure Chrome
 

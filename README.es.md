@@ -10,7 +10,6 @@ Transforma requisitos de software en documentación profesional y prototipos nav
 |------------|-----------|-------------|
 | **Propuesta Técnica** | Cliente / Dirección | Arquitectura, riesgos, cronograma, módulos funcionales |
 | **Historias de Usuario** | Desarrolladores / Scrum Master | Épicas, criterios de aceptación (Given/When/Then), story points, MoSCoW, trazabilidad |
-| **Análisis de Tech Stack** | Equipo Técnico / CTO | Scoring ponderado por capa, recomendación con justificación |
 | **Plan de Trabajo** | PM / Tech Lead | Fases, tareas, dependencias, hitos, diagrama Gantt |
 | **Prototipo HTML** | Todos | Pantallas navegables y responsive con Tailwind CSS — sin dependencias |
 
@@ -52,7 +51,6 @@ Corre el pipeline completo. O arranca desde un documento:
 | `/architect:analyze` | Extrae requisitos de un documento o Q&A interactivo |
 | `/architect:proposal` | Genera la propuesta técnica |
 | `/architect:stories` | Genera historias de usuario (nivel enterprise) |
-| `/architect:techstack` | Análisis de tech stack con scoring |
 | `/architect:todo` | Plan de trabajo con Gantt |
 | `/architect:prototype` | Prototipo HTML navegable |
 | `/architect:diagrams` | Renderiza diagramas Mermaid como SVG/PNG |
@@ -105,14 +103,11 @@ Dos agentes trabajan simultáneamente:
 
 Un checkpoint de revisión te permite ajustar ambos antes de continuar.
 
-### Paso 3: Tech Stack + Prototype (Paralelo)
+### Paso 3: Prototype
 
-Otros dos agentes trabajan simultáneamente:
-
-- **solution-architect** genera el **Análisis de Tech Stack** — evalúa 2-3 candidatos por capa (frontend, backend, base de datos, infraestructura, testing, CI/CD) con una tabla de scoring ponderado (escalabilidad 25%, curva de aprendizaje 15%, comunidad 15%, costo 20%, ajuste a requisitos 25%). Si indicaste un stack existente, valida tus elecciones en vez de recomendar desde cero.
 - **ux-designer** genera el **Prototipo HTML** — mapea historias de usuario a pantallas, crea un prototipo navegable con Tailwind CSS (vía CDN). Cada página tiene navegación funcional, datos de ejemplo realistas, diseño responsive y estilo consistente. Sin dependencias — abre `index.html` en cualquier browser.
 
-Otro checkpoint de revisión antes de continuar.
+Un checkpoint de revisión te permite ajustar antes de continuar.
 
 ### Paso 4: Work Plan
 
@@ -142,8 +137,8 @@ Preflight (Node.js? Chrome? Instalar herramientas)
    analyze → fa-context.json
        |
    proposal  ──paralelo──  stories
-       |                       |
-   techstack ──paralelo──  prototype
+       |
+      prototype
        |
       todo
        |
@@ -172,10 +167,6 @@ docs/architect/
     │   ├── stories.md
     │   ├── stories.docx
     │   └── stories.pdf
-    ├── techstack/
-    │   ├── techstack.md
-    │   ├── techstack.docx
-    │   └── techstack.pdf
     └── todo/
         ├── todo.md
         ├── todo.docx
@@ -189,7 +180,7 @@ El plugin usa 4 agentes especializados, cada uno con expertise de dominio defini
 | Agente | Rol | Skills | Qué hace |
 |--------|-----|--------|----------|
 | `business-analyst` | Experto en requisitos | analyze, stories | Extrae requisitos de documentos o Q&A. Detecta gaps y supuestos implícitos. Escribe criterios de aceptación en Given/When/Then. Asigna prioridades MoSCoW y story points. Nunca asume — hace preguntas precisas cuando falta información. |
-| `solution-architect` | Experto en arquitectura | proposal, techstack | Diseña arquitecturas escalables. Evalúa tech stacks con scoring objetivo. Produce diagramas Mermaid. Justifica cada decisión técnica con trade-offs. Escala la complejidad al proyecto. |
+| `solution-architect` | Experto en arquitectura | proposal | Diseña arquitecturas escalables. Produce diagramas Mermaid. Justifica cada decisión técnica con trade-offs. Escala la complejidad al proyecto. |
 | `ux-designer` | Experto en prototipado | prototype | Mapea historias de usuario a pantallas. Crea prototipos HTML navegables con Tailwind CSS. Usa datos realistas del contexto del proyecto. Asegura diseño responsive y estilo consistente en todas las páginas. |
 | `project-planner` | Experto en planificación | todo | Descompone proyectos en fases y tareas. Estima esfuerzo de forma realista (con 20-30% de margen). Identifica dependencias y ruta crítica. Crea diagramas Gantt y checklists priorizados. |
 

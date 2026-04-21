@@ -157,7 +157,6 @@ A visual Gantt chart showing all milestones, their duration, and dependencies.
 
 ## What NOT to Include in the Proposal
 
-- Scoring tables (those go in techstack deliverable)
 - User stories (those go in stories deliverable)
 - Wireframes or mockups (those go in prototype)
 - Detailed task breakdowns (those go in todo deliverable)

@@ -19,7 +19,6 @@ Generate a lean work plan from the project's `fa-context.json` and any previousl
 2. If not found: "No project context found. Run `/architect:analyze` first." Then stop.
 3. Also check for (optional, but enriches the plan):
    - `docs/architect/deliverables/stories/stories.md` — use story IDs and points for task references
-   - `docs/architect/deliverables/techstack/techstack.md` — use chosen stack for setup/infra tasks
    - `docs/architect/deliverables/proposal/proposal.md` — use architecture for technical tasks
 
 ## Generation Process

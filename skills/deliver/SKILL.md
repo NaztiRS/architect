@@ -1,6 +1,6 @@
 ---
 name: deliver
-description: Run the complete architect pipeline — analyze requirements, generate technical proposal, user stories, tech stack analysis, work plan, HTML prototype, and export all deliverables. Accepts a requirements document or starts interactive Q&A.
+description: Run the complete architect pipeline — analyze requirements, generate technical proposal, user stories, work plan, HTML prototype, and export all deliverables. Accepts a requirements document or starts interactive Q&A.
 argument-hint: "[ruta-documento] [--no-review] [--lang en|es]"
 allowed-tools: "Read Write Bash Glob Agent"
 context: fork
@@ -9,7 +9,7 @@ effort: high
 
 ## Your Mission
 
-Orchestrate the full architect pipeline. Generate all deliverables directly in this session — only use subagents for truly parallel work (proposal+stories, techstack+prototype).
+Orchestrate the full architect pipeline. Generate all deliverables directly in this session — only use subagents for truly parallel work (proposal+stories+prototype).
 
 ## Pipeline
 
@@ -17,7 +17,7 @@ Orchestrate the full architect pipeline. Generate all deliverables directly in t
 0. preflight → check environment, install tools
 1. analyze   → fa-context.json
 2. proposal  ──parallel──  stories       (subagents: only parallel pair)
-3. techstack ──parallel──  prototype     (subagents: only parallel pair)
+3. prototype                              (subagent)
 4. todo                                  (direct, no subagent)
 5. export                                (direct, no subagent)
 6. diagrams + render                     (direct, no subagent)
@@ -167,16 +167,14 @@ After both complete:
 **Review checkpoint** (skip if `--no-review`):
 > "Would you like to review these before continuing? (yes/no)"
 
-## Step 3: Tech Stack + Prototype (Parallel Subagents)
+## Step 3: Prototype (Subagent)
 
-These two are independent. Use the Agent tool:
+Generate the prototype using a subagent:
 
-- **Agent 1:** Generate techstack following `skills/techstack/SKILL.md` logic
-- **Agent 2:** Generate prototype following `skills/prototype/SKILL.md` logic. Uses `stories.md` from Step 2.
+- **Agent:** Generate prototype following `skills/prototype/SKILL.md` logic. Uses `stories.md` from Step 2.
 
-After both complete:
-> "✅ **Tech stack analysis and prototype generated.**
-> - Tech Stack: `docs/architect/deliverables/techstack/techstack.md` — Recommended: [stack summary]
+After completion:
+> "✅ **Prototype generated.**
 > - Prototype: `docs/architect/prototype/index.html` — [X] pages. Open in browser to navigate."
 
 **Review checkpoint** (skip if `--no-review`):
@@ -221,7 +219,6 @@ After completion:
 > |------------|-----|------|-----|
 > | Technical Proposal | `deliverables/proposal/proposal.md` | ✅/❌ | ✅/❌ |
 > | User Stories | `deliverables/stories/stories.md` | ✅/❌ | ✅/❌ |
-> | Tech Stack Analysis | `deliverables/techstack/techstack.md` | ✅/❌ | ✅/❌ |
 > | Work Plan | `deliverables/todo/todo.md` | ✅/❌ | ✅/❌ |
 >
 > | Other | Status | Location |
