@@ -53,9 +53,11 @@ That runs the full pipeline. Or start with a specific document:
 | `/architect:stories` | Generate user stories (enterprise level) |
 | `/architect:todo` | Work plan with Gantt chart |
 | `/architect:prototype` | Navigable HTML prototype |
+| `/architect:schema` | Inferred data model — ER diagram + reference SQL DDL |
 | `/architect:diagrams` | Render Mermaid diagrams as SVG/PNG |
 | `/architect:render` | Export deliverables as PDF/DOCX |
 | `/architect:export` | Generate README index of deliverables |
+| `/architect:validate` | Static consistency check across all deliverables |
 
 ### Options
 
@@ -142,7 +144,11 @@ Preflight (Node.js? Chrome? Install tools)
        |
       todo
        |
+      schema (ER diagram + reference SQL)
+       |
    export + diagrams + render
+       |
+   validate (consistency gate)
        |
    cleanup (keep or remove tools?)
 ```
@@ -157,9 +163,16 @@ docs/architect/
 │   ├── architecture-overview.png
 │   ├── proposal-timeline.svg
 │   └── proposal-timeline.png
+├── schema/
+│   ├── er-diagram.mmd
+│   ├── er-diagram.svg
+│   ├── er-diagram.png
+│   ├── schema.sql
+│   └── README.md
 ├── prototype/
 │   ├── index.html
-│   └── pages/
+│   ├── pages/
+│   └── assets/
 └── deliverables/
     ├── proposal/
     │   ├── proposal.md

@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: Generate a navigable HTML prototype with Tailwind CSS that reflects the user stories. Zero dependencies — opens directly in any browser. Run /architect:analyze first if no fa-context.json exists.
+description: Generate a navigable, production-grade HTML prototype with Tailwind CSS, Lucide icons, Chart.js, dark mode, and realistic states (empty/loading/error). Zero build step — opens directly in any browser. Run /architect:analyze first if no fa-context.json exists.
 argument-hint: "[en|es]"
 allowed-tools: "Read Write Glob"
 context: fork
@@ -11,209 +11,398 @@ You are operating as the **ux-designer** agent. Read `agents/ux-designer.md` fro
 
 ## Your Mission
 
-Generate a complete, navigable HTML prototype that brings the project's user stories to life.
+Generate a complete, navigable HTML prototype that brings the project's user stories to life. The prototype must look like a real product shipped by a design-led team — not like a wireframe or an AI mock.
 
 ## Prerequisites
 
-1. Look for `fa-context.json`. Check: `docs/architect/fa-context.json`, then `fa-context.json` in root.
+1. Look for `fa-context.json` in `docs/architect/` then `./`.
 2. If not found: "No project context found. Run `/architect:analyze` first." Then stop.
-3. Also look for `docs/architect/deliverables/stories/stories.md` — this is highly recommended for mapping stories to screens. If not found, derive screens from functional requirements in fa-context.json.
+3. Highly recommended: `docs/architect/deliverables/stories/stories.md` — map stories to screens. If missing, derive screens from `functional_requirements` in `fa-context.json`.
 
 ## Design System
 
-Before generating pages, establish a consistent design system based on the project's domain:
+The prototype uses a **single source of truth** for styling: `assets/tokens.css` (CSS custom properties). Every page reads from these variables. No hardcoded colors in markup.
 
-### Color System (Blue-dominant)
+### Tokens (`assets/tokens.css`)
 
-The prototype MUST use a blue-dominant color palette. This is non-negotiable:
+```css
+:root {
+  /* Brand */
+  --brand-900: #0F1B3D;
+  --brand-800: #1B365D;   /* primary */
+  --brand-700: #2C5282;
+  --brand-500: #2563EB;   /* accent */
+  --brand-400: #60A5FA;
+  --brand-100: #DBEAFE;
+  --brand-50:  #EFF6FF;
 
-- **Navigation bar:** `bg-[#1B365D]` (navy) with white text
-- **Primary buttons:** `bg-[#1B365D] hover:bg-[#2c5282]` with white text
-- **Section headers:** navy gradient or solid navy background
-- **Cards:** white background with `border border-gray-200`
-- **Accent elements:** `text-[#2563eb]` (bright blue) for links and interactive elements
-- **Backgrounds:** `bg-gray-50` for page, `bg-white` for cards
-- **Text:** `text-gray-900` for headings, `text-gray-600` for body
+  /* Neutrals */
+  --ink-900: #0F172A;
+  --ink-800: #1E293B;
+  --ink-700: #334155;
+  --ink-600: #475569;
+  --ink-500: #64748B;
+  --ink-400: #94A3B8;
+  --ink-300: #CBD5E1;
+  --ink-200: #E2E8F0;
+  --ink-100: #F1F5F9;
+  --ink-50:  #F8FAFC;
+  --surface: #FFFFFF;
+
+  /* Semantic */
+  --success: #059669;
+  --success-bg: #D1FAE5;
+  --warning: #D97706;
+  --warning-bg: #FEF3C7;
+  --danger: #DC2626;
+  --danger-bg: #FEE2E2;
+  --info: #0284C7;
+  --info-bg: #E0F2FE;
+
+  /* Radius & shadow */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --shadow-sm: 0 1px 2px rgba(15,23,42,0.05);
+  --shadow-md: 0 4px 12px -2px rgba(15,23,42,0.08), 0 2px 4px -2px rgba(15,23,42,0.05);
+  --shadow-lg: 0 12px 32px -8px rgba(15,23,42,0.15);
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+}
+
+html.dark {
+  --surface: #0F172A;
+  --ink-900: #F1F5F9;
+  --ink-800: #E2E8F0;
+  --ink-700: #CBD5E1;
+  --ink-600: #94A3B8;
+  --ink-500: #64748B;
+  --ink-400: #475569;
+  --ink-300: #334155;
+  --ink-200: #1E293B;
+  --ink-100: #0F172A;
+  --ink-50:  #020617;
+  --brand-50: rgba(37,99,235,0.12);
+  --brand-100: rgba(37,99,235,0.18);
+}
+
+body { font-family: var(--font-sans); color: var(--ink-800); background: var(--ink-50); }
+```
 
 ### Design Rules
 
-- **NO border-radius anywhere** — sharp, clean rectangles only. This gives a corporate, professional look.
-- **Inter font** — load via `<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">` and set `font-family: 'Inter', sans-serif` on body
-- **The prototype must look beautiful** — not just functional. Every screen should look like a real product, not a wireframe.
-- **Generous spacing** — use `p-6`, `m-4`, `gap-4` liberally
-- **Consistent shadow** — subtle `shadow-sm` on cards if needed (but sharp, not rounded)
-- **Stats/metrics** as big numbers in cards when relevant
-- **Tables** with navy header row (`bg-[#1B365D] text-white`) and alternating rows
-- **Navigation** must be prominent, fixed at top, navy background, with clear active state
+- **Subtle radius**: cards `--r-lg` (14px), buttons/inputs `--r-md` (10px), pills `--r-xl`, avatars `rounded-full`. Sharp corners are no longer required — modern corporate.
+- **Icons**: always use **Lucide** via CDN. Never emojis as UI icons. Use `data-lucide="icon-name"` and call `lucide.createIcons()`.
+- **Charts**: use **Chart.js** via CDN in any dashboard with metrics. Always paint with brand tokens.
+- **Typography**: Inter 300–800 from Google Fonts CDN. Headings 600–800, body 400, labels 500 uppercase tracking.
+- **Dark mode**: toggle in the navbar persists to `localStorage`. Every color comes from tokens — no `bg-white` hardcoded.
+- **Microinteractions**: `transition-all duration-200` on every interactive element, `hover:-translate-y-0.5` on cards, visible focus rings (`focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`).
+- **States**: every list / table / dashboard screen must include visible examples of at least two of: empty state, skeleton loading, error state, success toast.
+- **Responsive**: mobile first. Nav collapses to hamburger under 768px. Sidebars become drawers.
+- **Accessibility**: semantic landmarks (`<header>`, `<nav>`, `<main>`, `<aside>`), labels on every input, `aria-current="page"` on active nav, contrast AA.
+- **Realistic data**: pull names, numbers, dates, statuses directly from `fa-context.json` (roles, domain, features). Never "Lorem ipsum", never "John Doe" if the project is in Spanish.
 
-### Typography
-- Headings: `font-bold` with appropriate sizes, `text-[#1B365D]`
-- Body: `text-base text-gray-600`
-- Labels: `text-xs uppercase tracking-wider text-gray-400`
+## Required pages
 
-## Generation Process
+### 1. `index.html` — Landing / Dashboard
 
-### Step 1: Map Stories to Screens
+Depends on the project:
+- B2B SaaS / dashboards → metrics dashboard with 4 KPI cards + 1 line chart + 1 pie chart + recent-activity feed + CTA to primary action.
+- E-commerce / marketplace → hero + featured items grid + categories.
+- Internal tool → task inbox + sidebar filters.
 
-For each epic in stories.md (or functional requirement group):
-1. Identify which screens are needed
-2. Map user flows to page sequences
-3. List interactive elements per screen
+Pick from stories.md. The dashboard must feel populated, not empty.
 
-Example mapping:
-| Epic | Screens | Key Interactions |
-|------|---------|-----------------|
-| Authentication | login.html, register.html | Form submission, OAuth buttons |
-| Dashboard | dashboard.html | Data display, navigation |
-| Task Management | tasks.html, task-detail.html | CRUD operations, drag-and-drop |
+### 2. One page per epic
 
-### Step 2: Create Shared Assets
+For each epic in stories.md, generate at least one page covering its main flow. Include CRUD operations if the epic requires them.
 
-**`assets/styles.css`:**
-```css
-/* Custom styles beyond Tailwind */
-/* Navigation active state */
-.nav-active { @apply border-b-2 border-blue-500 text-blue-600; }
-/* Transition effects */
-.transition-all { transition: all 0.2s ease-in-out; }
-/* Responsive sidebar */
-@media (max-width: 768px) {
-  .sidebar { display: none; }
-  .sidebar.open { display: block; }
-}
+### 3. `design-system.html` — Component Library
+
+A single page showcasing the prototype's building blocks — lets stakeholders see the design decisions in isolation:
+- Color palette (brand, neutrals, semantic)
+- Typography scale
+- Buttons (primary / secondary / ghost / destructive / icon-only) in all states
+- Inputs (text / select / textarea / checkbox / radio / toggle) with valid / invalid states
+- Badges (status / priority / count)
+- Cards, stat cards, empty state, alert / toast, modal, drawer, tabs
+- Icons grid (shows which Lucide icons are used)
+
+This page makes the prototype look deliberately designed.
+
+## CDN stack (exactly these, no others)
+
+```html
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/styles.css">
 ```
 
-**`assets/app.js`:**
-```javascript
-// Navigation highlighting
-document.addEventListener('DOMContentLoaded', function() {
-  const currentPage = window.location.pathname.split('/').pop();
-  document.querySelectorAll('nav a').forEach(link => {
-    if (link.getAttribute('href').includes(currentPage)) {
-      link.classList.add('nav-active');
+Tailwind config (inline `<script>` before `</head>`):
+
+```html
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            50: '#EFF6FF', 100: '#DBEAFE', 400: '#60A5FA',
+            500: '#2563EB', 700: '#2C5282', 800: '#1B365D', 900: '#0F1B3D'
+          },
+          ink: {
+            50: '#F8FAFC', 100: '#F1F5F9', 200: '#E2E8F0', 300: '#CBD5E1',
+            400: '#94A3B8', 500: '#64748B', 600: '#475569', 700: '#334155',
+            800: '#1E293B', 900: '#0F172A'
+          }
+        },
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        borderRadius: { DEFAULT: '10px', md: '10px', lg: '14px', xl: '20px' }
+      }
     }
+  };
+</script>
+```
+
+## Shared assets
+
+### `assets/styles.css` — non-Tailwind utilities
+
+```css
+.card { background: var(--surface); border: 1px solid var(--ink-200); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); }
+.card-hover { transition: all 200ms ease; }
+.card-hover:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.btn { display: inline-flex; align-items: center; gap: .5rem; padding: .55rem 1rem; border-radius: var(--r-md); font-weight: 600; font-size: .875rem; transition: all 200ms ease; }
+.btn-primary { background: var(--brand-800); color: #fff; }
+.btn-primary:hover { background: var(--brand-700); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-secondary { background: var(--surface); color: var(--brand-800); border: 1px solid var(--ink-200); }
+.btn-secondary:hover { background: var(--brand-50); border-color: var(--brand-500); }
+.btn-ghost { color: var(--ink-600); }
+.btn-ghost:hover { background: var(--ink-100); color: var(--ink-900); }
+
+.badge { display: inline-flex; align-items: center; gap: .35rem; padding: .2rem .65rem; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+.badge-info { background: var(--brand-50); color: var(--brand-700); }
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); }
+.badge-danger { background: var(--danger-bg); color: var(--danger); }
+
+.stat-card { background: var(--surface); border: 1px solid var(--ink-200); border-radius: var(--r-lg); padding: 1.25rem; }
+.stat-value { font-size: 1.75rem; font-weight: 800; color: var(--brand-800); letter-spacing: -0.02em; line-height: 1.1; }
+.stat-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); font-weight: 600; margin-top: .35rem; }
+.stat-delta { font-size: .75rem; font-weight: 600; margin-top: .5rem; display: inline-flex; align-items: center; gap: .25rem; }
+.stat-delta.up { color: var(--success); }
+.stat-delta.down { color: var(--danger); }
+
+/* Skeleton loading */
+.skeleton { background: linear-gradient(90deg, var(--ink-100) 25%, var(--ink-200) 50%, var(--ink-100) 75%); background-size: 200% 100%; animation: skeleton 1.4s ease-in-out infinite; border-radius: var(--r-sm); }
+@keyframes skeleton { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* Empty state */
+.empty { text-align: center; padding: 3rem 1.5rem; }
+.empty-icon { width: 56px; height: 56px; background: var(--brand-50); color: var(--brand-700); border-radius: var(--r-lg); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+.empty-title { font-weight: 700; color: var(--ink-800); font-size: 1rem; }
+.empty-desc { color: var(--ink-500); font-size: .875rem; margin-top: .35rem; max-width: 420px; margin-inline: auto; }
+
+/* Toast */
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--surface); border: 1px solid var(--ink-200); border-left: 3px solid var(--success); padding: .85rem 1.1rem; border-radius: var(--r-md); box-shadow: var(--shadow-lg); display: flex; gap: .75rem; align-items: center; animation: toast-in .3s ease; }
+@keyframes toast-in { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Navigation */
+.nav-link { padding: .5rem .85rem; border-radius: var(--r-md); font-weight: 500; color: var(--ink-600); transition: all 200ms ease; font-size: .875rem; }
+.nav-link:hover { background: var(--ink-100); color: var(--ink-900); }
+.nav-link[aria-current="page"] { background: var(--brand-50); color: var(--brand-700); }
+
+/* Focus */
+*:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; border-radius: var(--r-sm); }
+```
+
+### `assets/app.js` — shared behavior
+
+```javascript
+// Theme (dark mode)
+(function () {
+  const saved = localStorage.getItem('theme');
+  const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (saved === 'dark' || (!saved && prefers)) document.documentElement.classList.add('dark');
+})();
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  if (window.lucide) lucide.createIcons();
+}
+
+// Active nav
+document.addEventListener('DOMContentLoaded', function () {
+  const current = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('[data-nav]').forEach(a => {
+    if (a.getAttribute('href').endsWith(current)) a.setAttribute('aria-current', 'page');
   });
+  if (window.lucide) lucide.createIcons();
 });
 
-// Mobile menu toggle
-function toggleMenu() {
-  document.querySelector('.sidebar')?.classList.toggle('open');
+// Mobile drawer
+function toggleDrawer(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('hidden');
 }
 
-// Tab switching
-function switchTab(tabId) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-  document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('border-blue-500', 'text-blue-600'));
-  document.getElementById(tabId)?.classList.remove('hidden');
-  event.target.classList.add('border-blue-500', 'text-blue-600');
+// Toast
+function toast(message, type) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = '<i data-lucide="' + (type === 'error' ? 'alert-circle' : 'check-circle-2') + '" class="w-5 h-5 text-' + (type === 'error' ? 'red' : 'green') + '-500"></i><span>' + message + '</span>';
+  document.body.appendChild(t);
+  if (window.lucide) lucide.createIcons();
+  setTimeout(() => t.remove(), 3000);
 }
 ```
 
-### Step 3: Create index.html (Entry Point)
+## Page template (every page uses this shell)
 
-This is the landing page / dashboard. It must:
-- Show a project overview consistent with `project.description`
-- Have navigation to all other pages
-- Display summary data relevant to the project domain
-- Include Tailwind CSS via CDN
-
-HTML template for every page:
 ```html
 <!DOCTYPE html>
 <html lang="{{output_config.language}}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{project.name}} — [Page Title]</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{project.name}} — [Page Title]</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>/* tailwind.config (see above) */</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <link rel="stylesheet" href="../assets/styles.css">
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center space-x-8">
-                    <span class="text-xl font-bold text-gray-900">{{project.name}}</span>
-                    <a href="../index.html" class="text-gray-600 hover:text-gray-900">Dashboard</a>
-                    <!-- More nav links based on epics -->
-                </div>
-                <div class="flex items-center">
-                    <span class="text-sm text-gray-500">{{sample_user_name}}</span>
-                </div>
-            </div>
+<body class="min-h-screen">
+  <!-- Top bar -->
+  <header class="sticky top-0 z-30 bg-[var(--surface)] border-b border-ink-200 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="../index.html" class="flex items-center gap-2 font-bold text-ink-900 dark:text-white">
+          <span class="w-8 h-8 rounded-lg bg-brand-800 text-white flex items-center justify-center text-sm font-black">{{project.initials}}</span>
+          <span>{{project.name}}</span>
+        </a>
+        <nav class="hidden md:flex gap-1">
+          <!-- Render one link per main epic -->
+          <a data-nav href="../index.html" class="nav-link">Dashboard</a>
+          <!-- ... -->
+        </nav>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="btn btn-ghost" onclick="toggleTheme()" aria-label="Toggle theme">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:inline"></i>
+          <i data-lucide="moon" class="w-4 h-4 inline dark:hidden"></i>
+        </button>
+        <div class="w-8 h-8 rounded-full bg-brand-50 text-brand-700 flex items-center justify-center text-xs font-bold">
+          {{sample_user_initials}}
         </div>
-    </nav>
+      </div>
+    </div>
+  </header>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Page-specific content -->
-    </main>
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Page content -->
+  </main>
 
-    <script src="assets/app.js"></script>
+  <script src="../assets/app.js"></script>
 </body>
 </html>
 ```
 
-### Step 4: Create Individual Pages
+`index.html` at the root uses `assets/` (no `../`). Internal pages in `pages/` use `../assets/`.
 
-For each screen identified in Step 1:
-1. Create the HTML file in `pages/`
-2. Use the shared navigation component
-3. Include realistic sample data derived from fa-context.json
-4. Make all links and navigation work (relative paths)
-5. Include appropriate interactive elements (forms, buttons, modals)
+## Generation process
 
-### Step 5: Create README.md for Prototype
+### Step 1 — Plan the screens
+
+From `stories.md`, map each epic to 1–2 screens. Write a table inline:
+
+| Epic | Screens | Key Interactions | States shown |
+|------|---------|------------------|--------------|
+| Authentication | login.html, register.html | Form validation, error, success | invalid email, wrong password, loading |
+| ... | ... | ... | ... |
+
+### Step 2 — Create shared assets
+
+Write `assets/tokens.css`, `assets/styles.css`, `assets/app.js` exactly as specified above.
+
+### Step 3 — Build `index.html`
+
+Dashboard / landing with 4 KPIs + 1 line chart + 1 donut + recent activity. Use Chart.js with brand colors (`--brand-800`, `--brand-500`, `--brand-400`). Populate data derived from the project context.
+
+### Step 4 — Build `pages/*.html`
+
+One HTML per screen identified in Step 1. Every page:
+- Uses the shell template
+- Is fully clickable (all nav links point somewhere real)
+- Shows realistic data
+- Includes at least one state variant (empty / loading / error) where relevant
+- Works in dark mode
+
+### Step 5 — Build `pages/design-system.html`
+
+The component library page. Showcases tokens, typography, buttons, inputs, badges, cards, stat cards, empty state, toast, modal skeleton.
+
+### Step 6 — README
 
 ```markdown
 # {{project.name}} — Prototype
 
-## How to View
-
-Open `index.html` in any modern browser. No server required.
+## View
+Open `index.html` in any modern browser. No build step.
 
 ## Pages
+| Page | Related Stories |
+|------|-----------------|
+| index.html | Dashboard summary |
+| pages/design-system.html | Component library — design reference |
+| pages/{epic}.html | ... |
 
-| Page | Description | Related Stories |
-|------|------------|----------------|
-| index.html | Main dashboard | — |
-| pages/login.html | Login screen | US-0101 |
-| ... | ... | ... |
-
-## Design Notes
-
-- Built with Tailwind CSS (loaded via CDN)
-- Fully responsive (desktop, tablet, mobile)
-- All navigation is functional
-- Sample data is for demonstration purposes
+## Tech
+- Tailwind CSS (CDN) with custom brand config
+- Lucide Icons
+- Chart.js
+- CSS custom properties for theming (dark mode toggle persisted to localStorage)
+- Zero build step
 ```
 
-## Output Structure
+## Output structure
 
 ```
-{output_config.output_dir}/prototype/
+{output_dir}/prototype/
 ├── index.html
 ├── pages/
-│   ├── [page-per-epic-or-flow].html
-│   └── ...
+│   ├── design-system.html
+│   └── [one-per-epic].html
 ├── assets/
+│   ├── tokens.css
 │   ├── styles.css
 │   └── app.js
 └── README.md
 ```
 
-## Important Rules
+## Hard rules
 
-- Every page MUST include the Tailwind CDN script tag
-- Every page MUST include the shared navigation bar
-- All links between pages MUST use correct relative paths
-- Sample data MUST be coherent with the project context — use project-appropriate names, terms, and numbers
-- UI text and labels MUST be in `output_config.language` (en or es)
-- The prototype is a FIRST-CLASS DELIVERABLE — put the same care into it as the documentation
+- **Never use emoji as UI icons.** Always Lucide.
+- **Never hardcode colors in markup.** Always reference tokens or Tailwind config.
+- **Every dashboard must have at least one chart.** No empty dashboards.
+- **Every list/table must have an empty state** reachable via a filter or query string (`?state=empty`).
+- **All links work.** If a link has no target, remove it — don't leave `href="#"` sprinkled around.
+- **Dark mode is not optional.** Every page must render correctly in both themes.
+- **UI text in `output_config.language`.** Technical terms stay in English.
+- **Prototype is a first-class deliverable.** Same care as documentation.
 
 ## Output
 
-1. Write all files to `{output_config.output_dir}/prototype/` (default: `docs/architect/prototype/`)
-2. Create all directories as needed
-3. Present a summary: "Prototype generated at `path`. [X] pages created. Open `index.html` in your browser to navigate."
+Write all files to `{output_dir}/prototype/` (default `docs/architect/prototype/`). Present a summary:
+
+> "Prototype generated at `path`. **{X}** pages created including the design system reference. Toggle theme with the sun/moon icon. Open `index.html` in your browser."

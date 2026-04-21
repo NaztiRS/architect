@@ -53,9 +53,11 @@ Corre el pipeline completo. O arranca desde un documento:
 | `/architect:stories` | Genera historias de usuario (nivel enterprise) |
 | `/architect:todo` | Plan de trabajo con Gantt |
 | `/architect:prototype` | Prototipo HTML navegable |
+| `/architect:schema` | Modelo de datos inferido — diagrama ER + SQL de referencia |
 | `/architect:diagrams` | Renderiza diagramas Mermaid como SVG/PNG |
 | `/architect:render` | Exporta entregables como PDF/DOCX |
 | `/architect:export` | Genera README índice de entregables |
+| `/architect:validate` | Chequeo estático de consistencia entre entregables |
 
 ### Opciones
 
@@ -67,7 +69,7 @@ Corre el pipeline completo. O arranca desde un documento:
 
 ## Cómo funciona el pipeline
 
-El pipeline completo (`/architect:deliver`) orquesta todo el proceso en 7 pasos:
+El pipeline completo (`/architect:deliver`) orquesta todo el proceso en 9 pasos:
 
 ### Paso 0: Preflight Check
 
@@ -142,7 +144,11 @@ Preflight (Node.js? Chrome? Instalar herramientas)
        |
       todo
        |
+      schema (diagrama ER + SQL de referencia)
+       |
    export + diagrams + render
+       |
+   validate (puerta de consistencia)
        |
    cleanup (conservar o eliminar herramientas?)
 ```
@@ -155,9 +161,16 @@ docs/architect/
 ├── diagrams/
 │   ├── architecture-overview.svg
 │   └── proposal-timeline.svg
+├── schema/
+│   ├── er-diagram.mmd
+│   ├── er-diagram.svg
+│   ├── er-diagram.png
+│   ├── schema.sql
+│   └── README.md
 ├── prototype/
 │   ├── index.html
-│   └── pages/
+│   ├── pages/
+│   └── assets/
 └── deliverables/
     ├── proposal/
     │   ├── proposal.md

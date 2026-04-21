@@ -19,9 +19,11 @@ Orchestrate the full architect pipeline. Generate all deliverables directly in t
 2. proposal  ──parallel──  stories       (subagents: only parallel pair)
 3. prototype                              (subagent)
 4. todo                                  (direct, no subagent)
-5. export                                (direct, no subagent)
-6. diagrams + render                     (direct, no subagent)
-7. cleanup   → optionally uninstall tools
+5. schema                                (direct, no subagent)
+6. export                                (direct, no subagent)
+7. diagrams + render                     (direct, no subagent)
+8. validate  → consistency gate          (direct, runs bin/validate.js)
+9. cleanup   → optionally uninstall tools
 ```
 
 ## Parse Arguments
@@ -188,15 +190,28 @@ After completion:
 > "✅ **Work plan generated.**
 > - Plan: `docs/architect/deliverables/todo/todo.md` — [X] phases, [Y] tasks, estimated [duration]"
 
-## Step 5: Export (Direct — No Subagent)
+## Step 5: Schema (Direct — No Subagent)
+
+Generate the reference data model following `skills/schema/SKILL.md` logic. Reads `fa-context.json`, `proposal.md` and `stories.md` to infer entities + relationships, and emits:
+
+- `docs/architect/schema/er-diagram.mmd` (Mermaid erDiagram source)
+- `docs/architect/schema/schema.sql` (reference DDL, PostgreSQL by default)
+- `docs/architect/schema/README.md` (entity notes + open questions)
+
+Rendering of the ER diagram happens in Step 7 together with the proposal diagrams (single `render-diagrams.js` pass over all `.mmd` files).
+
+After completion:
+> "✅ **Schema generated.** {N} entities, {M} relationships — `docs/architect/schema/`."
+
+## Step 6: Export (Direct — No Subagent)
 
 Consolidate deliverables directly following `skills/export/SKILL.md` logic. Simple file aggregation — no subagent needed.
 
-## Step 6: Diagrams + Render (Direct — No Subagent)
+## Step 7: Diagrams + Render (Direct — No Subagent)
 
 Run both directly in this session:
 
-1. **Diagrams:** Extract the 2 Mermaid diagrams from proposal.md, render as SVG/PNG following `skills/diagrams/SKILL.md` logic
+1. **Diagrams:** Extract the 2 Mermaid diagrams from proposal.md plus the ER diagram from `docs/architect/schema/er-diagram.mmd` (if Step 5 produced one), and render them all as SVG/PNG following `skills/diagrams/SKILL.md` logic. The ER diagram renders in place — its outputs live under `docs/architect/schema/`.
 2. **Render:** Generate DOCX and PDF for each deliverable independently following `skills/render/SKILL.md` logic
 
 **IMPORTANT:** Before calling mmdc or any puppeteer script, ensure `PUPPETEER_EXECUTABLE_PATH` is set:
@@ -225,12 +240,30 @@ After completion:
 > |-------|--------|----------|
 > | HTML Prototype | ✅ | `docs/architect/prototype/index.html` |
 > | Diagram Images | ✅ | `docs/architect/diagrams/` |
+> | Data Model (ER + SQL) | ✅/❌ | `docs/architect/schema/` |
 > | Index | ✅ | `docs/architect/README.md` |
 >
 > Open `docs/architect/prototype/index.html` in your browser to see the prototype.
 > Read `docs/architect/README.md` for the full deliverables index."
 
-## Step 7: Cleanup (Optional)
+## Step 8: Validate (Consistency Gate)
+
+Run the built-in validator before handing off. This catches missing artifacts, broken prototype links, orphan epic references, untraced functional requirements, and unrendered diagrams.
+
+```bash
+node "$CLAUDE_PLUGIN_ROOT/bin/validate.js" "docs/architect"
+```
+
+- Exit code `0`: proceed.
+- Exit code `1`: report the failures to the user. Do NOT silently continue. Offer concrete next steps (which skill to re-run) based on the failing area, then either ask whether to proceed to cleanup or stop.
+
+Note: `fa-context.json` has already been deleted in Step 7. The validator treats a missing `fa-context.json` as a **warning**, not a failure — so validate is still meaningful at this point.
+
+After completion:
+> "✅ **Validation: {N} ok, {M} warnings, {K} failures.**"
+> (Include the full report body verbatim from the script's stdout.)
+
+## Step 9: Cleanup (Optional)
 
 **Only run this step if `tools_installed_by_us = true` AND `--keep-tools` was NOT passed.**
 

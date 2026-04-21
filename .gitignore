@@ -1,0 +1,26 @@
+# Dependencies — installed locally by the plugin's preflight, never committed
+node_modules/
+package-lock.json
+
+# Generated artifacts from smoke tests / local runs
+.smoke-test/
+*.tmp
+*.tmp.html
+temp-*.html
+
+# OS / editor clutter
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local

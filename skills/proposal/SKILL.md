@@ -34,10 +34,13 @@ Read the appropriate template from the plugin directory: `templates/{language}/p
 
 Generate each section of the proposal:
 
-### 1. Executive Summary (2-3 paragraphs)
-- What the project is, who it's for, and why it matters
-- Key differentiators or challenges
-- High-level approach
+### 1. Executive Summary (MANDATORY)
+
+Emit the exact HTML block defined in `templates/style-reference.md` §3. This is a single-page visual card: Problem / Solution (one sentence each), Timeline / Investment / Team / Milestones metrics, 3 measurable KPIs, and a "Why this, why now" closer.
+
+Both the PDF (via `build-report-html.js`) and the DOCX (via `generate-docx.js`) detect this `<div class="exec-summary">` block and render it as a distinguished page. Do NOT replace it with prose paragraphs — the block is the deliverable.
+
+Fill every placeholder with project-specific values from `fa-context.json`. If a number is unknown, write `TBD` — never invent.
 
 ### 2. Project Scope
 - **In Scope:** List all functional requirements (reference FR-IDs)
@@ -63,10 +66,15 @@ For each module/component, describe using this structure:
 - Table mapping each NFR to how the architecture addresses it
 - Include specific metrics from the context
 
-### 7. Risks & Mitigations
-- Identify 5-10 risks based on the project's constraints, scale, and complexity
-- Rate each: Likelihood (Low/Medium/High) × Impact (Low/Medium/High)
-- Provide concrete mitigation strategies
+### 7. Risk Register (MANDATORY)
+
+Emit the exact HTML block defined in `templates/style-reference.md` §13 (Risk Register). Both the PDF template and the DOCX renderer detect `<div class="risk-register">` and produce: a 5×5 probability × impact heatmap (PDF) or a severity-coloured table (DOCX).
+
+Rules:
+- **5–10 risks.** Fewer = optimistic; more = padding.
+- Each risk has **probability 1–5**, **impact 1–5**, a concrete **mitigation action** (not a hope), and an **owner** (role or name, never "the team").
+- Place a `<span class="risk-marker">Rn</span>` inside each matrix cell where a risk sits (probability × impact coordinates). Markers must match the IDs in the table below.
+- Severity classes follow score = prob × impact: `sev-low` (1–4), `sev-med` (5–9), `sev-high` (10–14), `sev-crit` (15–25). Apply to the matching cell and to the `<span class="sev-badge">` in the Severity column.
 
 ### 8. Effort Estimation
 - Break down by phase (at minimum: MVP, v1)
