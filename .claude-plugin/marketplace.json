@@ -1,5 +1,4 @@
 {
-  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "NaztiRS Plugins",
   "description": "Professional software architecture and technical proposal generation plugins",
   "owner": {
@@ -12,7 +11,7 @@
       "description": "Functional Analysis & Technical Proposal generator. Generates user stories, tech stack analysis, work plans, navigable HTML prototypes, and professional corporate documents (PDF/DOCX) with rendered diagrams.",
       "source": ".",
       "category": "development",
-      "version": "2.0.0",
+      "version": "1.0.0",
       "author": {
         "name": "Reynaldo Suárez"
       }

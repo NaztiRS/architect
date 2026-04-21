@@ -28,7 +28,14 @@ if (!process.env.PUPPETEER_EXECUTABLE_PATH) {
   }
 }
 
-const puppeteer = require('puppeteer');
+let puppeteer;
+try {
+  puppeteer = require('puppeteer');
+} catch (e) {
+  const pluginDir = path.resolve(__dirname, '..');
+  console.error(`[architect] Missing dependency 'puppeteer'.\nRun: cd "${pluginDir}" && npm install`);
+  process.exit(1);
+}
 
 (async () => {
   const browser = await puppeteer.launch({

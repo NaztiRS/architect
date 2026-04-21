@@ -16,23 +16,39 @@ Transform project requirements into enterprise-grade documentation and navigable
 
 Each deliverable is exported in **3 formats**: `.md`, `.docx`, `.pdf`
 
+## Installation
+
+Inside Claude Code, add the marketplace and install the plugin:
+
+```
+/plugin marketplace add NaztiRS/architect
+/plugin install architect
+```
+
+### Requirements
+
+- **Node.js** (for PDF / DOCX / diagram rendering)
+- **Google Chrome** (used by puppeteer and mermaid-cli)
+
+On first use, the plugin runs `npm install` inside its own directory to fetch `puppeteer`, `docx` and `@mermaid-js/mermaid-cli` — **locally**, never globally. At the end you can keep them or remove them with one command.
+
 ## Quick Start
 
-```bash
-git clone https://github.com/NaztiRS/architect.git
-claude --plugin-dir ./architect
+```
+/architect:deliver
 ```
 
-Then run:
+That runs the full pipeline. Or start with a specific document:
+
 ```
-/architect:full-proposal
+/architect:deliver docs/spec.pdf
 ```
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `/architect:full-proposal` | Complete pipeline — generates everything |
+| `/architect:deliver` | Complete pipeline — generates everything |
 | `/architect:analyze` | Extract requirements from document or interactive Q&A |
 | `/architect:proposal` | Generate technical proposal |
 | `/architect:stories` | Generate user stories (enterprise level) |
@@ -46,14 +62,14 @@ Then run:
 ### Options
 
 ```
-/architect:full-proposal docs/spec.pdf     # Start from a document
-/architect:full-proposal --no-review       # Skip review checkpoints
-/architect:full-proposal --lang es         # Output in Spanish
+/architect:deliver docs/spec.pdf     # Start from a document
+/architect:deliver --no-review       # Skip review checkpoints
+/architect:deliver --lang es         # Output in Spanish
 ```
 
 ## How the Pipeline Works
 
-The full pipeline (`/architect:full-proposal`) orchestrates the entire process in 7 steps:
+The full pipeline (`/architect:deliver`) orchestrates the entire process in 7 steps:
 
 ### Step 0: Preflight Check
 

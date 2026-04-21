@@ -14,7 +14,7 @@ Export each architect deliverable independently as professionally styled corpora
 1. Look for generated deliverables in `docs/architect/deliverables/` (or custom output_dir from fa-context.json):
    - `fa-context.json` — required (in `docs/architect/`)
    - `deliverables/proposal/proposal.md`, `deliverables/stories/stories.md`, `deliverables/techstack/techstack.md`, `deliverables/todo/todo.md` — at least one required
-2. If no deliverables found: "No deliverables found. Run `/architect:full-proposal` or individual skills first." Then stop.
+2. If no deliverables found: "No deliverables found. Run `/architect:deliver` or individual skills first." Then stop.
 3. Check if `docs/architect/diagrams/` exists and has images. If not, run the diagrams skill logic first to render the Mermaid diagrams as images before proceeding.
 
 ## Parse Arguments
@@ -302,7 +302,7 @@ rm docs/architect/deliverables/*/temp-*.html
 
 2. **If puppeteer is NOT available:**
 > "PDF generation requires puppeteer. You can:
-> - Install it: `npm install -g puppeteer`
+> - Install plugin dependencies: run `npm install` inside the plugin directory
 > - Or generate HTML manually and use Chrome's Print → Save as PDF"
 
 ## Format: DOCX
@@ -519,7 +519,7 @@ The `generate-docx.js` script in `bin/` handles all of the above automatically:
 
 If the `docx` package is NOT available:
 > "DOCX generation requires the `docx` package. You can:
-> - Install it: `npm install -g docx`"
+> - Install plugin dependencies: run `npm install` inside the plugin directory"
 
 ### Key Rules for DOCX Quality
 

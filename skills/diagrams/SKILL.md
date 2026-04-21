@@ -13,7 +13,7 @@ Extract the 2 Mermaid diagrams from the proposal deliverable and render them as 
 
 1. Look for the proposal deliverable:
    - `docs/architect/deliverables/proposal/proposal.md` (or custom output_dir from fa-context.json)
-2. If not found: "No proposal found. Run `/architect:proposal` or `/architect:full-proposal` first." Then stop.
+2. If not found: "No proposal found. Run `/architect:proposal` or `/architect:deliver` first." Then stop.
 
 ## Parse Arguments
 
@@ -118,10 +118,11 @@ https://mermaid.ink/img/{base64_encoded_diagram}?theme=neutral&width=1200&bgColo
 ### If neither works:
 
 Inform the user:
-> "Could not render diagrams. For best results, install mermaid-cli:
+> "Could not render diagrams. Install the plugin dependencies by running inside the plugin directory:
 > ```
-> npm install -g @mermaid-js/mermaid-cli
+> npm install
 > ```
+> (This installs `@mermaid-js/mermaid-cli` locally in `<plugin-dir>/node_modules/`.)
 > Alternatively, ensure you have internet access for the mermaid.ink fallback."
 
 ## Output Structure

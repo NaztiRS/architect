@@ -1,5 +1,5 @@
 ---
-name: full-proposal
+name: deliver
 description: Run the complete architect pipeline — analyze requirements, generate technical proposal, user stories, tech stack analysis, work plan, HTML prototype, and export all deliverables. Accepts a requirements document or starts interactive Q&A.
 argument-hint: "[ruta-documento] [--no-review] [--lang en|es]"
 allowed-tools: "Read Write Bash Glob Agent"
@@ -47,7 +47,7 @@ node --version 2>/dev/null && npm --version 2>/dev/null
 >
 > Please install it from: https://nodejs.org/
 >
-> Once installed, run `/architect:full-proposal` again."
+> Once installed, run `/architect:deliver` again."
 
 **Do not continue without Node.js.** The pipeline cannot produce quality deliverables without it.
 
@@ -80,7 +80,7 @@ fi
 >
 > Please install it from: https://www.google.com/chrome/
 >
-> Once installed, run `/architect:full-proposal` again."
+> Once installed, run `/architect:deliver` again."
 
 **Do not continue without Chrome.** It is needed by mmdc and puppeteer.
 
@@ -97,35 +97,32 @@ export PUPPETEER_EXECUTABLE_PATH="$CHROME_PATH"
 
 ### 0.3 Check/Install Rendering Tools
 
-Check what's already installed:
+The plugin declares its dependencies in `package.json` (inside the plugin directory). All tools (`mmdc`, `puppeteer`, `docx`) are installed **locally** in `<plugin-dir>/node_modules/`, never globally.
+
+Check if already installed:
 
 ```bash
-which mmdc 2>/dev/null && echo "mmdc: ✅" || echo "mmdc: ❌"
-node -e "require('puppeteer')" 2>/dev/null && echo "puppeteer: ✅" || echo "puppeteer: ❌"
-node -e "require('docx')" 2>/dev/null && echo "docx: ✅" || echo "docx: ❌"
+PLUGIN_DIR="${CLAUDE_PLUGIN_ROOT:-$(dirname "$(dirname "$0")")}"
+[ -d "$PLUGIN_DIR/node_modules" ] && echo "deps: ✅" || echo "deps: ❌"
 ```
 
-**If any are missing**, inform the user what you found and what you'll install:
+**If missing**, inform the user and install in a single step:
 
 > "**Environment check:**
 > - Node.js: ✅ v[X]
 > - Chrome: ✅ [path]
-> - mmdc: ✅/❌
-> - puppeteer: ✅/❌
-> - docx: ✅/❌
+> - Plugin dependencies: ❌
 >
-> [List what's missing]. I'll install them now. At the end of the pipeline I'll ask if you want to keep them or remove them."
+> I'll install them now (locally in the plugin directory, not globally). At the end I'll ask if you want to keep them or remove them."
 
-Install **one by one** (prevents network failures from killing all installs):
+Install **once** inside the plugin directory:
 
 ```bash
 export PUPPETEER_EXECUTABLE_PATH="[detected Chrome path]"
-npm install -g @mermaid-js/mermaid-cli
-npm install -g puppeteer
-npm install -g docx
+cd "$PLUGIN_DIR" && npm install
 ```
 
-Verify each install succeeded before proceeding to the next. If one fails, report it and continue with the others.
+`PUPPETEER_EXECUTABLE_PATH` must be set BEFORE `npm install` so puppeteer skips downloading Chromium (~120MB).
 
 Set `tools_installed_by_us = true`.
 
@@ -137,9 +134,7 @@ After all checks, display a single status report:
 > |-----------|--------|
 > | Node.js | ✅ v[X] |
 > | Chrome | ✅ [path] |
-> | mmdc | ✅/❌ |
-> | puppeteer | ✅/❌ |
-> | docx | ✅/❌ |
+> | Plugin deps (mmdc + puppeteer + docx) | ✅ |
 >
 > Ready to begin analysis."
 
@@ -242,21 +237,21 @@ After completion:
 
 **Only run this step if `tools_installed_by_us = true` AND `--keep-tools` was NOT passed.**
 
-> "The rendering tools I installed earlier are still on your system:
+> "The rendering dependencies I installed earlier are in the plugin directory (`<plugin-dir>/node_modules`):
 > - `@mermaid-js/mermaid-cli` (mmdc)
 > - `puppeteer`
 > - `docx`
 >
 > Would you like to:
-> - **A)** Keep them — useful if you'll run architect again
-> - **B)** Uninstall them — clean up your system"
+> - **A)** Keep them — useful if you'll run architect again (no re-download next time)
+> - **B)** Remove them — frees disk space"
 
 If **B**:
 ```bash
-npm uninstall -g @mermaid-js/mermaid-cli puppeteer docx
+rm -rf "$PLUGIN_DIR/node_modules"
 ```
 
-> "✅ Tools uninstalled. Your system is clean. You can reinstall them anytime by running architect again."
+> "✅ Dependencies removed. They only lived in the plugin directory — your global npm and system are untouched. You can reinstall anytime by running architect again."
 
 If **A**:
 > "✅ Tools kept. They'll be detected automatically next time you run architect."

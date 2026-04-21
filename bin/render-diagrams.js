@@ -37,9 +37,20 @@ const basename = path.basename(inputFile, path.extname(inputFile));
 const svgOut = path.join(outputDir, basename + '.svg');
 const pngOut = path.join(outputDir, basename + '.png');
 
+const mmdcBin = path.join(
+  __dirname, '..', 'node_modules', '.bin',
+  process.platform === 'win32' ? 'mmdc.cmd' : 'mmdc'
+);
+
+if (!fs.existsSync(mmdcBin)) {
+  const pluginDir = path.resolve(__dirname, '..');
+  console.error(`[architect] Missing dependency '@mermaid-js/mermaid-cli'.\nRun: cd "${pluginDir}" && npm install`);
+  process.exit(1);
+}
+
 try {
-  execSync(`mmdc -i "${inputFile}" -o "${svgOut}" -t ${theme} -b transparent --width 1200`, { stdio: 'inherit' });
-  execSync(`mmdc -i "${inputFile}" -o "${pngOut}" -t ${theme} -b white --width 1200 --scale 2`, { stdio: 'inherit' });
+  execSync(`"${mmdcBin}" -i "${inputFile}" -o "${svgOut}" -t ${theme} -b transparent --width 1200`, { stdio: 'inherit' });
+  execSync(`"${mmdcBin}" -i "${inputFile}" -o "${pngOut}" -t ${theme} -b white --width 1200 --scale 2`, { stdio: 'inherit' });
   console.log('SVG: ' + svgOut);
   console.log('PNG: ' + pngOut);
 } catch (err) {

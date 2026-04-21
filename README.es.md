@@ -16,23 +16,39 @@ Transforma requisitos de software en documentación profesional y prototipos nav
 
 Cada entregable se exporta en **3 formatos**: `.md`, `.docx`, `.pdf`
 
+## Instalación
+
+Dentro de Claude Code, añade el marketplace e instala el plugin:
+
+```
+/plugin marketplace add NaztiRS/architect
+/plugin install architect
+```
+
+### Requisitos
+
+- **Node.js** (para generar PDF / DOCX / diagramas)
+- **Google Chrome** (usado por puppeteer y mermaid-cli)
+
+En el primer uso, el plugin ejecuta `npm install` dentro de su propio directorio para instalar `puppeteer`, `docx` y `@mermaid-js/mermaid-cli` — **localmente**, nunca globalmente. Al final puedes conservarlos o eliminarlos con un solo comando.
+
 ## Inicio rápido
 
-```bash
-git clone https://github.com/NaztiRS/architect.git
-claude --plugin-dir ./architect
+```
+/architect:deliver
 ```
 
-Luego ejecuta:
+Corre el pipeline completo. O arranca desde un documento:
+
 ```
-/architect:full-proposal
+/architect:deliver docs/requisitos.pdf
 ```
 
 ## Comandos
 
 | Comando | Descripción |
 |---------|-------------|
-| `/architect:full-proposal` | Pipeline completo — genera todo |
+| `/architect:deliver` | Pipeline completo — genera todo |
 | `/architect:analyze` | Extrae requisitos de un documento o Q&A interactivo |
 | `/architect:proposal` | Genera la propuesta técnica |
 | `/architect:stories` | Genera historias de usuario (nivel enterprise) |
@@ -46,14 +62,14 @@ Luego ejecuta:
 ### Opciones
 
 ```
-/architect:full-proposal docs/requisitos.pdf   # Iniciar desde un documento
-/architect:full-proposal --no-review           # Sin checkpoints de revisión
-/architect:full-proposal --lang es             # Salida en español
+/architect:deliver docs/requisitos.pdf   # Iniciar desde un documento
+/architect:deliver --no-review           # Sin checkpoints de revisión
+/architect:deliver --lang es             # Salida en español
 ```
 
 ## Cómo funciona el pipeline
 
-El pipeline completo (`/architect:full-proposal`) orquesta todo el proceso en 7 pasos:
+El pipeline completo (`/architect:deliver`) orquesta todo el proceso en 7 pasos:
 
 ### Paso 0: Preflight Check
 

@@ -11,7 +11,14 @@ if (!inputMd || !outputDocx) {
   process.exit(1);
 }
 
-const docx = require('docx');
+let docx;
+try {
+  docx = require('docx');
+} catch (e) {
+  const pluginDir = path.resolve(__dirname, '..');
+  console.error(`[architect] Missing dependency 'docx'.\nRun: cd "${pluginDir}" && npm install`);
+  process.exit(1);
+}
 
 // Read input
 const mdContent = fs.readFileSync(path.resolve(inputMd), 'utf8');

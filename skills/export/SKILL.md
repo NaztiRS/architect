@@ -18,7 +18,7 @@ Create an organized README.md index for all generated architect deliverables.
    - `deliverables/techstack/techstack.md` — optional
    - `deliverables/todo/todo.md` — optional
    - `prototype/` — optional
-2. If no deliverables found: "No deliverables found. Run `/architect:full-proposal` or individual skills first." Then stop.
+2. If no deliverables found: "No deliverables found. Run `/architect:deliver` or individual skills first." Then stop.
 3. Read `fa-context.json` for `output_config`.
 
 ## Action
