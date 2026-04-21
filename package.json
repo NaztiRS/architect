@@ -1,6 +1,6 @@
 {
   "name": "architect-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Dependencies for the architect Claude Code plugin",
   "private": true,
   "dependencies": {

@@ -11,7 +11,7 @@
       "description": "Functional Analysis & Technical Proposal generator. Generates user stories, work plans, navigable HTML prototypes, and professional corporate documents (PDF/DOCX) with rendered diagrams.",
       "source": "./",
       "category": "development",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "Reynaldo Suárez"
       }
