@@ -101,7 +101,7 @@
   "output_config": {
     "language": "en",
     "format": "both",
-    "output_dir": "docs/architect/"
+    "output_dir": "docs/software-architect/"
   },
   "metadata": {
     "generated_at": "2026-04-07T10:30:00Z",

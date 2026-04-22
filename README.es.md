@@ -1,4 +1,4 @@
-# Architect
+# Software Architect
 
 Plugin de Claude Code para **Análisis Funcional y generación de Propuestas Técnicas** para proyectos de software.
 
@@ -20,8 +20,8 @@ Cada entregable se exporta en **3 formatos**: `.md`, `.docx`, `.pdf`
 Dentro de Claude Code, añade el marketplace e instala el plugin:
 
 ```
-/plugin marketplace add NaztiRS/architect
-/plugin install architect
+/plugin marketplace add NaztiRS/software-architect
+/plugin install software-architect
 ```
 
 ### Requisitos
@@ -34,42 +34,42 @@ En el primer uso, el plugin ejecuta `npm install` dentro de su propio directorio
 ## Inicio rápido
 
 ```
-/architect:deliver
+/software-architect:deliver
 ```
 
 Corre el pipeline completo. O arranca desde un documento:
 
 ```
-/architect:deliver docs/requisitos.pdf
+/software-architect:deliver docs/requisitos.pdf
 ```
 
 ## Comandos
 
 | Comando | Descripción |
 |---------|-------------|
-| `/architect:deliver` | Pipeline completo — genera todo |
-| `/architect:analyze` | Extrae requisitos de un documento o Q&A interactivo |
-| `/architect:proposal` | Genera la propuesta técnica |
-| `/architect:stories` | Genera historias de usuario (nivel enterprise) |
-| `/architect:todo` | Plan de trabajo con Gantt |
-| `/architect:prototype` | Prototipo HTML navegable |
-| `/architect:schema` | Modelo de datos inferido — diagrama ER + SQL de referencia |
-| `/architect:diagrams` | Renderiza diagramas Mermaid como SVG/PNG |
-| `/architect:render` | Exporta entregables como PDF/DOCX |
-| `/architect:export` | Genera README índice de entregables |
-| `/architect:validate` | Chequeo estático de consistencia entre entregables |
+| `/software-architect:deliver` | Pipeline completo — genera todo |
+| `/software-architect:analyze` | Extrae requisitos de un documento o Q&A interactivo |
+| `/software-architect:proposal` | Genera la propuesta técnica |
+| `/software-architect:stories` | Genera historias de usuario (nivel enterprise) |
+| `/software-architect:todo` | Plan de trabajo con Gantt |
+| `/software-architect:prototype` | Prototipo HTML navegable |
+| `/software-architect:schema` | Modelo de datos inferido — diagrama ER + SQL de referencia |
+| `/software-architect:diagrams` | Renderiza diagramas Mermaid como SVG/PNG |
+| `/software-architect:render` | Exporta entregables como PDF/DOCX |
+| `/software-architect:export` | Genera README índice de entregables |
+| `/software-architect:validate` | Chequeo estático de consistencia entre entregables |
 
 ### Opciones
 
 ```
-/architect:deliver docs/requisitos.pdf   # Iniciar desde un documento
-/architect:deliver --no-review           # Sin checkpoints de revisión
-/architect:deliver --lang es             # Salida en español
+/software-architect:deliver docs/requisitos.pdf   # Iniciar desde un documento
+/software-architect:deliver --no-review           # Sin checkpoints de revisión
+/software-architect:deliver --lang es             # Salida en español
 ```
 
 ## Cómo funciona el pipeline
 
-El pipeline completo (`/architect:deliver`) orquesta todo el proceso en 9 pasos:
+El pipeline completo (`/software-architect:deliver`) orquesta todo el proceso en 9 pasos:
 
 ### Paso 0: Preflight Check
 
@@ -156,7 +156,7 @@ Preflight (Node.js? Chrome? Instalar herramientas)
 ## Estructura de salida
 
 ```
-docs/architect/
+docs/software-architect/
 ├── README.md
 ├── diagrams/
 │   ├── architecture-overview.svg

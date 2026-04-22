@@ -1,6 +1,6 @@
 ---
 name: stories
-description: Generate compact user stories with epics, acceptance criteria (Given/When/Then), story points, MoSCoW priorities, dependencies, and traceability matrix. Run /architect:analyze first if no fa-context.json exists.
+description: Generate compact user stories with epics, acceptance criteria (Given/When/Then), story points, MoSCoW priorities, dependencies, and traceability matrix. Run /software-architect:analyze first if no fa-context.json exists.
 argument-hint: "[en|es]"
 allowed-tools: "Read Write"
 context: fork
@@ -16,9 +16,9 @@ Generate compact, well-structured user stories from the project's `fa-context.js
 ## Prerequisites
 
 1. Look for `fa-context.json` in the project. Check these locations in order:
-   - `docs/architect/fa-context.json`
+   - `docs/software-architect/fa-context.json`
    - `fa-context.json` in the project root
-2. If not found, tell the user: "No project context found. Run `/architect:analyze` first to generate it." Then stop.
+2. If not found, tell the user: "No project context found. Run `/software-architect:analyze` first to generate it." Then stop.
 3. If found, read it and proceed.
 
 ## Generation Process
@@ -59,5 +59,5 @@ Create a table mapping every functional requirement to its epic and stories:
 ## Output
 
 1. Create the `deliverables/stories/` directory if it doesn't exist
-2. Write to `{output_config.output_dir}/deliverables/stories/stories.md` (default: `docs/architect/deliverables/stories/stories.md`)
+2. Write to `{output_config.output_dir}/deliverables/stories/stories.md` (default: `docs/software-architect/deliverables/stories/stories.md`)
 3. Present a summary: "Generated [X] epics with [Y] stories totaling [Z] story points. Written to `path`."

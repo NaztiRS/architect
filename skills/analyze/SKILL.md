@@ -128,7 +128,7 @@ n. "How would you like the output files?
    - A category (performance / security / scalability / usability / reliability / other)
    - A measurable metric when possible
 4. Calculate final completeness score
-5. Write the file to the output directory (default: `docs/architect/fa-context.json`)
+5. Write the file to the output directory (default: `docs/software-architect/fa-context.json`)
    Note: fa-context.json is an internal file used during generation. It will be automatically deleted after all deliverables are produced.
 6. Present a summary to the user
 

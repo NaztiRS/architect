@@ -1,7 +1,7 @@
 {
-  "name": "architect-plugin",
+  "name": "software-architect-plugin",
   "version": "1.0.1",
-  "description": "Dependencies for the architect Claude Code plugin",
+  "description": "Dependencies for the software-architect Claude Code plugin",
   "private": true,
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^11.4.0",

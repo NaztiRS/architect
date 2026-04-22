@@ -1,6 +1,6 @@
 ---
 name: proposal
-description: Generate a complete technical proposal document from the project context. Includes architecture, components, risks, and timeline. Run /architect:analyze first if no fa-context.json exists.
+description: Generate a complete technical proposal document from the project context. Includes architecture, components, risks, and timeline. Run /software-architect:analyze first if no fa-context.json exists.
 argument-hint: "[en|es]"
 allowed-tools: "Read Write"
 context: fork
@@ -23,9 +23,9 @@ No other Mermaid diagrams should be included in the proposal.
 
 1. Look for `fa-context.json` in the project. Check these locations in order:
    - The path specified in the user's arguments (if any)
-   - `docs/architect/fa-context.json`
+   - `docs/software-architect/fa-context.json`
    - `fa-context.json` in the project root
-2. If not found, tell the user: "No project context found. Run `/architect:analyze` first to generate it." Then stop.
+2. If not found, tell the user: "No project context found. Run `/software-architect:analyze` first to generate it." Then stop.
 3. If found, read it and proceed.
 
 ## Generation Process
@@ -92,5 +92,5 @@ Rules:
 ## Output
 
 1. Create the `deliverables/proposal/` directory if it doesn't exist
-2. Write the proposal to `{output_config.output_dir}/deliverables/proposal/proposal.md` (default: `docs/architect/deliverables/proposal/proposal.md`)
+2. Write the proposal to `{output_config.output_dir}/deliverables/proposal/proposal.md` (default: `docs/software-architect/deliverables/proposal/proposal.md`)
 3. Present a brief summary to the user: "Technical proposal generated at `path`. Key highlights: ..."

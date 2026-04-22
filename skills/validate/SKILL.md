@@ -11,13 +11,13 @@ Run the built-in validator against the architect output and surface the report t
 
 ## Prerequisites
 
-1. `docs/architect/` should exist (or the path passed in `$ARGUMENTS`). If missing, inform the user to run `/architect:analyze` or `/architect:deliver` first.
+1. `docs/software-architect/` should exist (or the path passed in `$ARGUMENTS`). If missing, inform the user to run `/software-architect:analyze` or `/software-architect:deliver` first.
 2. Node.js is available (preflight already verified it in the pipeline).
 
 ## Parse Arguments
 
 From `$ARGUMENTS`:
-- First positional that is not a flag → path to the docs directory (default: `docs/architect`)
+- First positional that is not a flag → path to the docs directory (default: `docs/software-architect`)
 - `--json` — emit machine-readable JSON instead of the human report
 - `--strict` — warnings become failures (useful before hand-off to a client)
 
@@ -34,7 +34,7 @@ The script returns exit code `0` when there are no failures (warnings allowed un
 | Area | Checks |
 |------|--------|
 | **context** | `fa-context.json` parses; `project.name` and `project.description` present |
-| **deliverables** | proposal / stories / todo each exist in `.md` (fail if missing), `.docx`, `.pdf` (warn if missing — hint to run `/architect:render`) |
+| **deliverables** | proposal / stories / todo each exist in `.md` (fail if missing), `.docx`, `.pdf` (warn if missing — hint to run `/software-architect:render`) |
 | **diagrams** | Count of ```` ```mermaid ```` fences in `proposal.md` matches rendered `.png` count in `diagrams/` |
 | **stories** | Epics are declared; every `Epic: Ex` reference points to a declared epic; MoSCoW badges `[MUST]/[SHOULD]/[COULD]/[WON'T]` are used; every `FR-xxx` from the context is mentioned somewhere in `stories.md` |
 | **todo** | Every module from `proposal.md` has a mention in `todo.md` |
@@ -45,12 +45,12 @@ The script returns exit code `0` when there are no failures (warnings allowed un
 
 Read the script's stdout. Pass it through verbatim to the user (don't re-format — the script already formats the report). Then add a short "next steps" block ONLY if there were failures or warnings:
 
-- Failures in **deliverables** → run `/architect:deliver` or the specific skill (`/architect:proposal`, etc.)
-- Failures in **diagrams** → run `/architect:diagrams`
-- Failures in **prototype** (broken links) → re-run `/architect:prototype` or edit the HTML files manually
-- Failures in **stories** (orphan epic, missing trace) → re-run `/architect:stories` after tightening `fa-context.json`
-- Warnings for **DOCX/PDF missing** → run `/architect:render`
-- Warnings for **schema incomplete** → run `/architect:schema`
+- Failures in **deliverables** → run `/software-architect:deliver` or the specific skill (`/software-architect:proposal`, etc.)
+- Failures in **diagrams** → run `/software-architect:diagrams`
+- Failures in **prototype** (broken links) → re-run `/software-architect:prototype` or edit the HTML files manually
+- Failures in **stories** (orphan epic, missing trace) → re-run `/software-architect:stories` after tightening `fa-context.json`
+- Warnings for **DOCX/PDF missing** → run `/software-architect:render`
+- Warnings for **schema incomplete** → run `/software-architect:schema`
 
 If the script exits `0` with no warnings, respond with a single line:
 

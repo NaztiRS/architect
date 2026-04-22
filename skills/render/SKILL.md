@@ -17,15 +17,15 @@ The rendering pipeline is **fully scripted** — you do NOT generate HTML or DOC
 | `generate-pdf.js` | HTML → PDF (via puppeteer + system Chrome) |
 | `generate-docx.js` | Markdown → DOCX (native Word elements, embeds diagrams as PNG) |
 
-All scripts read metadata from `fa-context.json` and the rendered diagrams from `docs/architect/diagrams/`.
+All scripts read metadata from `fa-context.json` and the rendered diagrams from `docs/software-architect/diagrams/`.
 
 ## Prerequisites
 
-1. Look for generated deliverables in `docs/architect/deliverables/` (or custom `output_dir`):
-   - `fa-context.json` — required (in `docs/architect/`)
+1. Look for generated deliverables in `docs/software-architect/deliverables/` (or custom `output_dir`):
+   - `fa-context.json` — required (in `docs/software-architect/`)
    - At least one of `deliverables/{proposal|stories|todo}/{name}.md` — required
-2. If no deliverables found: "No deliverables found. Run `/architect:deliver` or individual skills first." Then stop.
-3. If `docs/architect/diagrams/` is missing or empty, run the diagrams skill logic first. Diagrams must exist as PNG before render (DOCX embeds PNG, and HTML embeds PNG as base64 for reliable PDF printing).
+2. If no deliverables found: "No deliverables found. Run `/software-architect:deliver` or individual skills first." Then stop.
+3. If `docs/software-architect/diagrams/` is missing or empty, run the diagrams skill logic first. Diagrams must exist as PNG before render (DOCX embeds PNG, and HTML embeds PNG as base64 for reliable PDF printing).
 
 ## Parse Arguments
 
@@ -58,10 +58,10 @@ For each deliverable that exists (`proposal`, `stories`, `todo`):
 
 ```bash
 node "$CLAUDE_PLUGIN_ROOT/bin/build-report-html.js" \
-  "docs/architect/deliverables/{name}/{name}.md" \
-  "docs/architect/deliverables/{name}/temp-{name}.html" \
-  "docs/architect/fa-context.json" \
-  "docs/architect/diagrams"
+  "docs/software-architect/deliverables/{name}/{name}.md" \
+  "docs/software-architect/deliverables/{name}/temp-{name}.html" \
+  "docs/software-architect/fa-context.json" \
+  "docs/software-architect/diagrams"
 ```
 
 This produces a fully self-contained HTML (inline CSS from the template, base64-embedded diagrams, no external assets except the Google Fonts CDN for Inter).
@@ -71,8 +71,8 @@ This produces a fully self-contained HTML (inline CSS from the template, base64-
 ```bash
 export PUPPETEER_EXECUTABLE_PATH="[Chrome path from preflight]"
 node "$CLAUDE_PLUGIN_ROOT/bin/generate-pdf.js" \
-  "docs/architect/deliverables/{name}/temp-{name}.html" \
-  "docs/architect/deliverables/{name}/{name}.pdf" \
+  "docs/software-architect/deliverables/{name}/temp-{name}.html" \
+  "docs/software-architect/deliverables/{name}/{name}.pdf" \
   "{ProjectName}"
 ```
 
@@ -80,10 +80,10 @@ node "$CLAUDE_PLUGIN_ROOT/bin/generate-pdf.js" \
 
 ```bash
 node "$CLAUDE_PLUGIN_ROOT/bin/generate-docx.js" \
-  "docs/architect/deliverables/{name}/{name}.md" \
-  "docs/architect/deliverables/{name}/{name}.docx" \
-  "docs/architect/fa-context.json" \
-  "docs/architect/diagrams"
+  "docs/software-architect/deliverables/{name}/{name}.md" \
+  "docs/software-architect/deliverables/{name}/{name}.docx" \
+  "docs/software-architect/fa-context.json" \
+  "docs/software-architect/diagrams"
 ```
 
 `generate-docx.js` reads the diagrams directory and auto-embeds PNG images when it finds `` ```mermaid `` fences — same behavior as the HTML builder.
@@ -91,7 +91,7 @@ node "$CLAUDE_PLUGIN_ROOT/bin/generate-docx.js" \
 ### Step 4 — Clean up the temporary HTML
 
 ```bash
-rm -f docs/architect/deliverables/*/temp-*.html
+rm -f docs/software-architect/deliverables/*/temp-*.html
 ```
 
 HTML is internal-only. The user only ever sees the `.md`, `.docx`, and `.pdf` under each deliverable folder.
@@ -102,7 +102,7 @@ Pseudocode:
 
 ```
 for name in [proposal, stories, todo]:
-  md = "docs/architect/deliverables/{name}/{name}.md"
+  md = "docs/software-architect/deliverables/{name}/{name}.md"
   if not exists(md): continue
   run build-report-html.js md → temp.html
   run generate-pdf.js temp.html → {name}.pdf
@@ -127,7 +127,7 @@ If a script fails (missing `puppeteer`, missing `docx`, Chrome path wrong), pres
 ## Output Structure
 
 ```
-docs/architect/
+docs/software-architect/
 ├── diagrams/                        # Rendered Mermaid diagrams (PNG + SVG)
 │   ├── architecture-overview.png
 │   └── proposal-timeline.png
@@ -157,5 +157,5 @@ docs/architect/
 > | Stories | ✅ | ✅/❌ | ✅/❌ |
 > | Work Plan | ✅ | ✅/❌ | ✅/❌ |
 >
-> Diagrams embedded: {N} images from `docs/architect/diagrams/`.
-> Each deliverable is in its own folder under `docs/architect/deliverables/`."
+> Diagrams embedded: {N} images from `docs/software-architect/diagrams/`.
+> Each deliverable is in its own folder under `docs/software-architect/deliverables/`."

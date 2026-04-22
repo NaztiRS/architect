@@ -330,7 +330,7 @@ setupFixture();
 
 // 4. validate.js — runs against a minimal faux-output tree we set up inline
 (() => {
-  // Build a tiny docs/architect-like tree inside the smoke test dir
+  // Build a tiny docs/software-architect-like tree inside the smoke test dir
   const valRoot = path.join(testDir, 'val-docs', 'architect');
   const prop = path.join(valRoot, 'deliverables', 'proposal');
   const stor = path.join(valRoot, 'deliverables', 'stories');

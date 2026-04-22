@@ -1,6 +1,6 @@
 ---
 name: todo
-description: Generate a complete work plan with project phases, task breakdown, dependencies, milestones, Gantt chart, and a getting-started checklist. Run /architect:analyze first if no fa-context.json exists.
+description: Generate a complete work plan with project phases, task breakdown, dependencies, milestones, Gantt chart, and a getting-started checklist. Run /software-architect:analyze first if no fa-context.json exists.
 argument-hint: "[en|es]"
 allowed-tools: "Read Write"
 context: fork
@@ -15,11 +15,11 @@ Generate a lean work plan from the project's `fa-context.json` and any previousl
 
 ## Prerequisites
 
-1. Look for `fa-context.json`. Check: `docs/architect/fa-context.json`, then `fa-context.json` in root.
-2. If not found: "No project context found. Run `/architect:analyze` first." Then stop.
+1. Look for `fa-context.json`. Check: `docs/software-architect/fa-context.json`, then `fa-context.json` in root.
+2. If not found: "No project context found. Run `/software-architect:analyze` first." Then stop.
 3. Also check for (optional, but enriches the plan):
-   - `docs/architect/deliverables/stories/stories.md` — use story IDs and points for task references
-   - `docs/architect/deliverables/proposal/proposal.md` — use architecture for technical tasks
+   - `docs/software-architect/deliverables/stories/stories.md` — use story IDs and points for task references
+   - `docs/software-architect/deliverables/proposal/proposal.md` — use architecture for technical tasks
 
 ## Generation Process
 
@@ -102,5 +102,5 @@ A prioritized list of immediate action items (first 1-2 weeks):
 ## Output
 
 1. Create the `deliverables/todo/` directory if it doesn't exist
-2. Write to `{output_config.output_dir}/deliverables/todo/todo.md` (default: `docs/architect/deliverables/todo/todo.md`)
+2. Write to `{output_config.output_dir}/deliverables/todo/todo.md` (default: `docs/software-architect/deliverables/todo/todo.md`)
 3. Present a summary: "Work plan generated at `path`. [X] phases, [Y] tasks, [Z] milestones. Estimated timeline: [duration]."

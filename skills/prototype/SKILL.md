@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: Generate a navigable, production-grade HTML prototype with Tailwind CSS, Lucide icons, Chart.js, dark mode, and realistic states (empty/loading/error). Zero build step — opens directly in any browser. Run /architect:analyze first if no fa-context.json exists.
+description: Generate a navigable, production-grade HTML prototype with Tailwind CSS, Lucide icons, Chart.js, dark mode, and realistic states (empty/loading/error). Zero build step — opens directly in any browser. Run /software-architect:analyze first if no fa-context.json exists.
 argument-hint: "[en|es]"
 allowed-tools: "Read Write Glob"
 context: fork
@@ -15,9 +15,9 @@ Generate a complete, navigable HTML prototype that brings the project's user sto
 
 ## Prerequisites
 
-1. Look for `fa-context.json` in `docs/architect/` then `./`.
-2. If not found: "No project context found. Run `/architect:analyze` first." Then stop.
-3. Highly recommended: `docs/architect/deliverables/stories/stories.md` — map stories to screens. If missing, derive screens from `functional_requirements` in `fa-context.json`.
+1. Look for `fa-context.json` in `docs/software-architect/` then `./`.
+2. If not found: "No project context found. Run `/software-architect:analyze` first." Then stop.
+3. Highly recommended: `docs/software-architect/deliverables/stories/stories.md` — map stories to screens. If missing, derive screens from `functional_requirements` in `fa-context.json`.
 
 ## Design System
 
@@ -403,6 +403,6 @@ Open `index.html` in any modern browser. No build step.
 
 ## Output
 
-Write all files to `{output_dir}/prototype/` (default `docs/architect/prototype/`). Present a summary:
+Write all files to `{output_dir}/prototype/` (default `docs/software-architect/prototype/`). Present a summary:
 
 > "Prototype generated at `path`. **{X}** pages created including the design system reference. Toggle theme with the sun/moon icon. Open `index.html` in your browser."

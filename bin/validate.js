@@ -2,7 +2,7 @@
 /**
  * Static validator for an architect project output.
  *
- * Reads docs/architect/ (or the path passed as first argument) and checks
+ * Reads docs/software-architect/ (or the path passed as first argument) and checks
  * that the deliverables form a coherent, internally consistent set:
  *
  *   - fa-context.json exists and has required fields
@@ -28,7 +28,7 @@ const args = process.argv.slice(2);
 const jsonMode = args.includes('--json');
 const strict = args.includes('--strict'); // warnings fail
 const docsDir = path.resolve(
-  args.find(a => !a.startsWith('--')) || 'docs/architect'
+  args.find(a => !a.startsWith('--')) || 'docs/software-architect'
 );
 
 const results = [];
@@ -73,8 +73,8 @@ let ctx = readJsonSafe(contextPath);
 let contextLang = 'en';
 
 if (!existsFile(contextPath)) {
-  // fa-context.json is deleted at the end of /architect:deliver; that's fine.
-  warn('context', 'fa-context.json not present (normal after /architect:deliver finishes)', contextPath);
+  // fa-context.json is deleted at the end of /software-architect:deliver; that's fine.
+  warn('context', 'fa-context.json not present (normal after /software-architect:deliver finishes)', contextPath);
 } else if (!ctx) {
   fail('context', 'fa-context.json is not valid JSON', contextPath);
 } else {
@@ -90,6 +90,31 @@ if (!existsFile(contextPath)) {
     if (ctx.project.name) ok('context', 'project identified', ctx.project.name);
   }
   if (ctx.output_config && ctx.output_config.language) contextLang = ctx.output_config.language;
+}
+
+// ---------------------------------------------------------------------------
+// 1.5 Stray deliverables check (files in wrong location)
+// ---------------------------------------------------------------------------
+
+const ALLOWED_ROOT_FILES = ['fa-context.json', 'README.md'];
+const strayFiles = [];
+try {
+  const rootEntries = fs.readdirSync(docsDir).filter(function (e) {
+    return e.endsWith('.md') && !ALLOWED_ROOT_FILES.includes(e);
+  });
+  if (rootEntries.length > 0) {
+    rootEntries.forEach(function (f) {
+      // Check if this .md should be inside deliverables/
+      const name = f.replace(/\.md$/, '');
+      if (['proposal', 'stories', 'todo'].indexOf(name) !== -1) {
+        fail('paths', name + '.md is in the root — should be in deliverables/' + name + '/' + f, path.join(docsDir, f));
+        strayFiles.push(f);
+      }
+    });
+  }
+} catch (e) { /* ignore */ }
+if (strayFiles.length === 0) {
+  ok('paths', 'no stray deliverable .md files in root');
 }
 
 // ---------------------------------------------------------------------------
@@ -117,7 +142,7 @@ if (!existsDir(deliverablesDir)) {
       if (existsFile(f)) ok('deliverables', d.label + ' ' + ext.toUpperCase(), path.relative(docsDir, f));
       else {
         if (ext === 'md') fail('deliverables', d.label + ' markdown missing', path.relative(docsDir, f));
-        else warn('deliverables', d.label + ' ' + ext.toUpperCase() + ' missing (run /architect:render)', path.relative(docsDir, f));
+        else warn('deliverables', d.label + ' ' + ext.toUpperCase() + ' missing (run /software-architect:render)', path.relative(docsDir, f));
       }
     });
   });
@@ -139,7 +164,7 @@ if (proposalMd) {
     } else {
       const pngs = fs.readdirSync(diagramsDir).filter(f => /\.png$/i.test(f)).length;
       const svgs = fs.readdirSync(diagramsDir).filter(f => /\.svg$/i.test(f)).length;
-      if (pngs < fences) fail('diagrams', 'only ' + pngs + ' PNG(s) for ' + fences + ' Mermaid fence(s) — run /architect:diagrams');
+      if (pngs < fences) fail('diagrams', 'only ' + pngs + ' PNG(s) for ' + fences + ' Mermaid fence(s) — run /software-architect:diagrams');
       else ok('diagrams', fences + ' mermaid fence(s) ↔ ' + pngs + ' PNG(s) ↔ ' + svgs + ' SVG(s)');
     }
   }
@@ -292,7 +317,7 @@ if (existsDir(schemaDir)) {
   const hasPng = entries.some(f => /\.png$/i.test(f));
   if (!hasMmd) warn('schema', 'schema/ exists but no .mmd file found');
   if (!hasSql) warn('schema', 'schema/ exists but no .sql file found');
-  if (hasMmd && !hasPng) warn('schema', 'schema .mmd present but not rendered (run /architect:schema or /architect:diagrams)');
+  if (hasMmd && !hasPng) warn('schema', 'schema .mmd present but not rendered (run /software-architect:schema or /software-architect:diagrams)');
   if (hasMmd && hasSql && hasPng) ok('schema', 'schema artifacts complete (.mmd + .sql + .png)');
 }
 

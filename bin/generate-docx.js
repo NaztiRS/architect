@@ -58,7 +58,7 @@ const scale = (context.project && context.project.scale) || '';
 
 const diagramsDir = diagramsDirArg
   ? path.resolve(diagramsDirArg)
-  : (contextJson ? path.resolve(path.dirname(path.resolve(contextJson)), 'diagrams') : path.resolve('docs/architect/diagrams'));
+  : (contextJson ? path.resolve(path.dirname(path.resolve(contextJson)), 'diagrams') : path.resolve('docs/software-architect/diagrams'));
 
 let diagramFiles = [];
 if (fs.existsSync(diagramsDir)) {

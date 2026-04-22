@@ -11,18 +11,18 @@ Create an organized README.md index for all generated architect deliverables.
 
 ## Prerequisites
 
-1. Look for generated deliverables in `docs/architect/` (or the custom output_dir from fa-context.json):
+1. Look for generated deliverables in `docs/software-architect/` (or the custom output_dir from fa-context.json):
    - `fa-context.json` — required
    - `deliverables/proposal/proposal.md` — optional
    - `deliverables/stories/stories.md` — optional
    - `deliverables/todo/todo.md` — optional
    - `prototype/` — optional
-2. If no deliverables found: "No deliverables found. Run `/architect:deliver` or individual skills first." Then stop.
+2. If no deliverables found: "No deliverables found. Run `/software-architect:deliver` or individual skills first." Then stop.
 3. Read `fa-context.json` for `output_config`.
 
 ## Action
 
-Create/update `docs/architect/README.md` as an index organized by audience:
+Create/update `docs/software-architect/README.md` as an index organized by audience:
 
 ```markdown
 # {{project.name}} — Architect Deliverables
@@ -63,9 +63,9 @@ Mark each file with ✅ if it exists or ❌ if not yet generated.
 
 ## Output
 
-1. Write `docs/architect/README.md`
+1. Write `docs/software-architect/README.md`
 2. Present a summary:
-   > "Export complete. Deliverables index at `docs/architect/README.md`:
+   > "Export complete. Deliverables index at `docs/software-architect/README.md`:
    > - [list of what was generated with ✅]
    > - [list of what's missing with ❌ and hint to generate it]
    > Total: [X] deliverables + [Y] prototype pages"

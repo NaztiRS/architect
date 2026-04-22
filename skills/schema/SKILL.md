@@ -11,17 +11,17 @@ You are operating as the **solution-architect** agent. This skill produces a fir
 
 Read the project's context and functional artifacts, infer the domain entities and their relationships, and emit three artifacts:
 
-1. `docs/architect/schema/er-diagram.mmd` — Mermaid `erDiagram` source
-2. `docs/architect/schema/er-diagram.{svg,png}` — rendered images
-3. `docs/architect/schema/schema.sql` — reference DDL (PostgreSQL by default)
-4. `docs/architect/schema/README.md` — one paragraph per entity explaining purpose and key invariants
+1. `docs/software-architect/schema/er-diagram.mmd` — Mermaid `erDiagram` source
+2. `docs/software-architect/schema/er-diagram.{svg,png}` — rendered images
+3. `docs/software-architect/schema/schema.sql` — reference DDL (PostgreSQL by default)
+4. `docs/software-architect/schema/README.md` — one paragraph per entity explaining purpose and key invariants
 
 ## Prerequisites
 
-1. `fa-context.json` must exist (check `docs/architect/fa-context.json` then project root). If missing: "No project context found. Run `/architect:analyze` first." Stop.
+1. `fa-context.json` must exist (check `docs/software-architect/fa-context.json` then project root). If missing: "No project context found. Run `/software-architect:analyze` first." Stop.
 2. Strongly preferred (not required):
-   - `docs/architect/deliverables/proposal/proposal.md` — modules describe entities implicitly
-   - `docs/architect/deliverables/stories/stories.md` — epics map to entity clusters
+   - `docs/software-architect/deliverables/proposal/proposal.md` — modules describe entities implicitly
+   - `docs/software-architect/deliverables/stories/stories.md` — epics map to entity clusters
 3. If both proposal and stories are missing, work only from `fa-context.json` and flag in the output that the schema is less grounded.
 
 ## Parse Arguments
@@ -132,8 +132,8 @@ Unless `--no-render` was passed, render with the existing script. Ensure Chrome 
 
 ```bash
 node "$CLAUDE_PLUGIN_ROOT/bin/render-diagrams.js" \
-  "docs/architect/schema/er-diagram.mmd" \
-  "docs/architect/schema" \
+  "docs/software-architect/schema/er-diagram.mmd" \
+  "docs/software-architect/schema" \
   neutral
 ```
 
@@ -276,10 +276,10 @@ After generating all four files, report:
 >
 > | Artifact | Location |
 > |----------|----------|
-> | ER diagram (Mermaid) | `docs/architect/schema/er-diagram.mmd` |
-> | ER diagram (SVG + PNG) | `docs/architect/schema/er-diagram.{svg,png}` |
-> | Reference DDL | `docs/architect/schema/schema.sql` |
-> | Entity notes | `docs/architect/schema/README.md` |
+> | ER diagram (Mermaid) | `docs/software-architect/schema/er-diagram.mmd` |
+> | ER diagram (SVG + PNG) | `docs/software-architect/schema/er-diagram.{svg,png}` |
+> | Reference DDL | `docs/software-architect/schema/schema.sql` |
+> | Entity notes | `docs/software-architect/schema/README.md` |
 >
 > **Entities:** {N}   **Relationships:** {M}   **Dialect:** {dialect}
 >

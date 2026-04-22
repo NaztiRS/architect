@@ -1,6 +1,6 @@
 ---
 name: diagrams
-description: Render the 2 Mermaid diagrams from the proposal (architecture overview + timeline Gantt) as SVG and PNG images. Uses mmdc (mermaid-cli) if installed, falls back to mermaid.ink API. Output to docs/architect/diagrams/.
+description: Render the 2 Mermaid diagrams from the proposal (architecture overview + timeline Gantt) as SVG and PNG images. Uses mmdc (mermaid-cli) if installed, falls back to mermaid.ink API. Output to docs/software-architect/diagrams/.
 argument-hint: "--format [svg|png|both] --theme [neutral|dark|forest]"
 allowed-tools: "Read Write Bash Glob"
 ---
@@ -12,8 +12,8 @@ Extract the 2 Mermaid diagrams from the proposal deliverable and render them as 
 ## Prerequisites
 
 1. Look for the proposal deliverable:
-   - `docs/architect/deliverables/proposal/proposal.md` (or custom output_dir from fa-context.json)
-2. If not found: "No proposal found. Run `/architect:proposal` or `/architect:deliver` first." Then stop.
+   - `docs/software-architect/deliverables/proposal/proposal.md` (or custom output_dir from fa-context.json)
+2. If not found: "No proposal found. Run `/software-architect:proposal` or `/software-architect:deliver` first." Then stop.
 
 ## Parse Arguments
 
@@ -84,7 +84,7 @@ For each extracted diagram:
 1. Write the Mermaid code to a temporary `.mmd` file
 2. Use the `render-diagrams.js` script from the plugin's `bin/` directory to render both SVG and PNG:
 ```bash
-node [plugin-dir]/bin/render-diagrams.js temp.mmd docs/architect/diagrams [theme]
+node [plugin-dir]/bin/render-diagrams.js temp.mmd docs/software-architect/diagrams [theme]
 ```
 
 Usage: `render-diagrams.js <input.mmd> <output-dir> [theme]`
@@ -113,7 +113,7 @@ https://mermaid.ink/svg/{base64_encoded_diagram}
 https://mermaid.ink/img/{base64_encoded_diagram}?theme=neutral&width=1200&bgColor=white
 ```
 
-3. Save the downloaded files to `docs/architect/diagrams/`
+3. Save the downloaded files to `docs/software-architect/diagrams/`
 
 ### If neither works:
 
@@ -128,7 +128,7 @@ Inform the user:
 ## Output Structure
 
 ```
-docs/architect/diagrams/
+docs/software-architect/diagrams/
 ├── architecture-overview.svg
 ├── architecture-overview.png
 ├── proposal-timeline.svg
@@ -137,13 +137,13 @@ docs/architect/diagrams/
 
 ## Output
 
-1. Create the `docs/architect/diagrams/` directory if it doesn't exist
+1. Create the `docs/software-architect/diagrams/` directory if it doesn't exist
 2. Report rendering results:
    > "**Diagrams rendered.**
    >
    > Method: [mmdc / mermaid.ink API]
    > Total: 2 diagrams rendered ([Y] SVG + [Z] PNG)
-   > Location: `docs/architect/diagrams/`
+   > Location: `docs/software-architect/diagrams/`
    >
    > Diagrams:
    > - `architecture-overview` — from deliverables/proposal/proposal.md (High-Level Architecture)
