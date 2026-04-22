@@ -1,7 +1,7 @@
 {
   "name": "software-architect",
   "description": "Functional Analysis & Technical Proposal generator for software projects. Generates user stories, work plans, navigable HTML prototypes, and professional corporate reports (PDF/DOCX/HTML) with rendered diagrams.",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": {
     "name": "Reynaldo Suárez"
   },

@@ -34,10 +34,9 @@ The script returns exit code `0` when there are no failures (warnings allowed un
 | Area | Checks |
 |------|--------|
 | **context** | `fa-context.json` parses; `project.name` and `project.description` present |
-| **deliverables** | proposal / stories / todo each exist in `.md` (fail if missing), `.docx`, `.pdf` (warn if missing — hint to run `/software-architect:render`) |
+| **deliverables** | proposal / stories each exist in `.md` (fail if missing), `.docx`, `.pdf` (warn if missing — hint to run `/software-architect:render`) |
 | **diagrams** | Count of ```` ```mermaid ```` fences in `proposal.md` matches rendered `.png` count in `diagrams/` |
 | **stories** | Epics are declared; every `Epic: Ex` reference points to a declared epic; MoSCoW badges `[MUST]/[SHOULD]/[COULD]/[WON'T]` are used; every `FR-xxx` from the context is mentioned somewhere in `stories.md` |
-| **todo** | Every module from `proposal.md` has a mention in `todo.md` |
 | **prototype** | Every internal `<a href>` to an `.html` file resolves; every local `<img src>` resolves |
 | **schema** | If `schema/` exists, `.mmd` + `.sql` + `.png` are all present |
 

@@ -1,6 +1,6 @@
 ---
 name: deliver
-description: Run the complete architect pipeline — analyze requirements, generate technical proposal, user stories, work plan, HTML prototype, and export all deliverables. Accepts a requirements document or starts interactive Q&A.
+description: Run the complete architect pipeline — analyze requirements, generate technical proposal, user stories, HTML prototype, and export all deliverables. Accepts a requirements document or starts interactive Q&A.
 argument-hint: "[ruta-documento] [--no-review] [--lang en|es]"
 allowed-tools: "Read Write Bash Glob Agent"
 context: fork
@@ -41,17 +41,13 @@ docs/software-architect/
     │   ├── stories.md                     ← Step 2
     │   ├── stories.docx                   ← Step 7
     │   └── stories.pdf                    ← Step 7
-    └── todo/
-        ├── todo.md                        ← Step 4
-        ├── todo.docx                      ← Step 7
-        └── todo.pdf                       ← Step 7
 ```
 
 **Rules:**
-- Steps 2, 4 must create `deliverables/{name}/` directories before writing
-- Step 5 must create `schema/` directory before writing
+- Steps 2 must create `deliverables/{name}/` directories before writing
+- Step 4 must create `schema/` directory before writing
 - Step 7 must create `diagrams/` directory before writing
-- Steps 2, 4, 5, 6, 7 must verify their output files exist after writing (use Glob or Bash `ls`)
+- Steps 2, 4, 5, 6 must verify their output files exist after writing (use Glob or Bash `ls`)
 - The only `.md` files in the root of `docs/software-architect/` are `README.md` and `fa-context.json`
 
 ## Pipeline
@@ -63,17 +59,15 @@ docs/software-architect/
    ↳ verify: deliverables/proposal/proposal.md + deliverables/stories/stories.md exist
 3. prototype                              (subagent)
    ↳ verify: prototype/index.html exists
-4. todo                                  (direct, no subagent)
-   ↳ verify: deliverables/todo/todo.md exists
-5. schema                                (direct, no subagent)
+4. schema                                (direct, no subagent)
    ↳ verify: schema/er-diagram.mmd + schema/schema.sql exist
-6. export                                (direct, no subagent)
+5. export                                (direct, no subagent)
    ↳ verify: README.md exists
-7. diagrams + render                     (direct, no subagent)
+6. diagrams + render                     (direct, no subagent)
    ↳ verify: diagrams/*.png + deliverables/*/*.pdf + deliverables/*/*.docx exist
-8. validate  → consistency gate          (runs bin/validate.js)
+7. validate  → consistency gate          (runs bin/validate.js)
    ↳ if failures: auto-fix loop (up to 2 retries)
-9. cleanup   → optionally uninstall tools
+8. cleanup   → optionally uninstall tools
 ```
 
 ## Parse Arguments
@@ -252,29 +246,7 @@ After completion:
 **Review checkpoint** (skip if `--no-review`):
 > "Would you like to review before continuing? (yes/no)"
 
-## Step 4: Work Plan (Direct — No Subagent)
-
-Generate directly in this session following `skills/todo/SKILL.md` logic. This is a single file generation — no need for a subagent.
-
-**CRITICAL:** Write to `docs/software-architect/deliverables/todo/todo.md`. Create the directory first.
-
-After completion, **verify output**:
-
-```bash
-ls -la docs/software-architect/deliverables/todo/todo.md
-```
-
-If the file ended up in the wrong location, move it:
-
-```bash
-mkdir -p docs/software-architect/deliverables/todo
-mv docs/software-architect/todo.md docs/software-architect/deliverables/todo/todo.md 2>/dev/null
-```
-
-> "✅ **Work plan generated.**
-> - Plan: `docs/software-architect/deliverables/todo/todo.md` — [X] phases, [Y] tasks, estimated [duration]"
-
-## Step 5: Schema (Direct — No Subagent)
+## Step 4: Schema (Direct — No Subagent)
 
 Generate the reference data model following `skills/schema/SKILL.md` logic. Reads `fa-context.json`, `proposal.md` and `stories.md` to infer entities + relationships, and emits:
 
@@ -282,7 +254,7 @@ Generate the reference data model following `skills/schema/SKILL.md` logic. Read
 - `docs/software-architect/schema/schema.sql` (reference DDL, PostgreSQL by default)
 - `docs/software-architect/schema/README.md` (entity notes + open questions)
 
-Rendering of the ER diagram happens in Step 7 together with the proposal diagrams (single `render-diagrams.js` pass over all `.mmd` files).
+Rendering of the ER diagram happens in Step 6 together with the proposal diagrams (single `render-diagrams.js` pass over all `.mmd` files).
 
 **CRITICAL:** Create `schema/` directory before writing. Verify after:
 
@@ -300,15 +272,15 @@ If `.mmd` or `.sql` ended up elsewhere (e.g., as `er-diagram.md` instead of `er-
 
 > "✅ **Schema generated.** {N} entities, {M} relationships — `docs/software-architect/schema/`."
 
-## Step 6: Export (Direct — No Subagent)
+## Step 5: Export (Direct — No Subagent)
 
 Consolidate deliverables directly following `skills/export/SKILL.md` logic. Simple file aggregation — no subagent needed.
 
-## Step 7: Diagrams + Render (Direct — No Subagent)
+## Step 6: Diagrams + Render (Direct — No Subagent)
 
 Run both directly in this session:
 
-1. **Diagrams:** Extract the 2 Mermaid diagrams from proposal.md plus the ER diagram from `docs/software-architect/schema/er-diagram.mmd` (if Step 5 produced one), and render them all as SVG/PNG following `skills/diagrams/SKILL.md` logic. The ER diagram renders in place — its outputs live under `docs/software-architect/schema/`.
+1. **Diagrams:** Extract the 2 Mermaid diagrams from proposal.md plus the ER diagram from `docs/software-architect/schema/er-diagram.mmd` (if Step 4 produced one), and render them all as SVG/PNG following `skills/diagrams/SKILL.md` logic. The ER diagram renders in place — its outputs live under `docs/software-architect/schema/`.
 2. **Render:** Generate DOCX and PDF for each deliverable independently following `skills/render/SKILL.md` logic
 
 **IMPORTANT:** Before calling mmdc or any puppeteer script, ensure `PUPPETEER_EXECUTABLE_PATH` is set:
@@ -327,7 +299,7 @@ After rendering, **verify all expected files exist**:
 echo "=== Diagrams ==="
 ls docs/software-architect/diagrams/*.png docs/software-architect/diagrams/*.svg 2>/dev/null || echo "NO DIAGRAM IMAGES FOUND"
 echo "=== Deliverables ==="
-for name in proposal stories todo; do
+for name in proposal stories; do
   echo "--- $name ---"
   ls docs/software-architect/deliverables/$name/$name.{md,docx,pdf} 2>/dev/null || echo "  MISSING FILES for $name"
 done
@@ -352,7 +324,6 @@ After completion:
 > |------------|-----|------|-----|
 > | Technical Proposal | `deliverables/proposal/proposal.md` | ✅/❌ | ✅/❌ |
 > | User Stories | `deliverables/stories/stories.md` | ✅/❌ | ✅/❌ |
-> | Work Plan | `deliverables/todo/todo.md` | ✅/❌ | ✅/❌ |
 >
 > | Other | Status | Location |
 > |-------|--------|----------|
@@ -364,7 +335,7 @@ After completion:
 > Open `docs/software-architect/prototype/index.html` in your browser to see the prototype.
 > Read `docs/software-architect/README.md` for the full deliverables index."
 
-## Step 8: Validate + Auto-Fix Loop
+## Step 7: Validate + Auto-Fix Loop
 
 Run the built-in validator. If it finds failures, **automatically retry** the failing areas up to 2 times before reporting to the user.
 
@@ -378,7 +349,7 @@ Note: `fa-context.json` has already been deleted in Step 7. The validator treats
 
 ### 8.2 If Exit Code 0
 
-Validation passed. Proceed to Step 9 (cleanup).
+Validation passed. Proceed to Step 8 (cleanup).
 
 > "✅ **Validation: {N} ok, {M} warnings, {K} failures.**"
 
@@ -388,8 +359,8 @@ Parse the validator output to identify which areas failed. For each failing area
 
 | Failing Area | Auto-Fix Action |
 |---|---|
-| `deliverables` folder missing | Create `deliverables/{proposal,stories,todo}/` and move any root-level `.md` files into them |
-| `deliverables/*` .md missing | The corresponding skill (proposal/stories/todo) failed — **cannot auto-fix**, report to user |
+| `deliverables` folder missing | Create `deliverables/{proposal,stories}/` and move any root-level `.md` files into them |
+| `deliverables/*` .md missing | The corresponding skill (proposal/stories) failed — **cannot auto-fix**, report to user |
 | `deliverables/*` .docx or .pdf missing | Re-run the render pipeline for that specific deliverable using `bin/build-report-html.js`, `bin/generate-pdf.js`, `bin/generate-docx.js` |
 | `diagrams` missing PNG/SVG | Re-run diagram rendering: extract Mermaid from `deliverables/proposal/proposal.md` and render with `bin/render-diagrams.js` or mermaid.ink fallback |
 | `schema` missing PNG | Re-run ER diagram rendering with `bin/render-diagrams.js` |
@@ -419,7 +390,7 @@ node "$CLAUDE_PLUGIN_ROOT/bin/validate.js" "docs/software-architect"
 
 Do NOT silently skip failures. Always inform the user.
 
-## Step 9: Cleanup (Optional)
+## Step 8: Cleanup (Optional)
 
 **Only run this step if `tools_installed_by_us = true` AND `--keep-tools` was NOT passed.**
 

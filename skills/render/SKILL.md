@@ -7,7 +7,7 @@ allowed-tools: "Read Write Bash Glob"
 
 ## Your Mission
 
-Export each architect deliverable independently as professionally styled corporate documents. Each deliverable (proposal, stories, todo) is rendered in its own folder with DOCX and PDF alongside the source .md.
+Export each architect deliverable independently as professionally styled corporate documents. Each deliverable (proposal, stories) is rendered in its own folder with DOCX and PDF alongside the source .md.
 
 The rendering pipeline is **fully scripted** — you do NOT generate HTML or DOCX by hand. You invoke three deterministic Node.js scripts from the plugin's `bin/` directory:
 
@@ -23,7 +23,7 @@ All scripts read metadata from `fa-context.json` and the rendered diagrams from 
 
 1. Look for generated deliverables in `docs/software-architect/deliverables/` (or custom `output_dir`):
    - `fa-context.json` — required (in `docs/software-architect/`)
-   - At least one of `deliverables/{proposal|stories|todo}/{name}.md` — required
+   - At least one of `deliverables/{proposal|stories}/{name}.md` — required
 2. If no deliverables found: "No deliverables found. Run `/software-architect:deliver` or individual skills first." Then stop.
 3. If `docs/software-architect/diagrams/` is missing or empty, run the diagrams skill logic first. Diagrams must exist as PNG before render (DOCX embeds PNG, and HTML embeds PNG as base64 for reliable PDF printing).
 
@@ -52,7 +52,7 @@ You do NOT have to reproduce the design system in prose — it is codified in `t
 
 ## Rendering Pipeline
 
-For each deliverable that exists (`proposal`, `stories`, `todo`):
+For each deliverable that exists (`proposal`, `stories`):
 
 ### Step 1 — Build the HTML from markdown
 
@@ -101,7 +101,7 @@ HTML is internal-only. The user only ever sees the `.md`, `.docx`, and `.pdf` un
 Pseudocode:
 
 ```
-for name in [proposal, stories, todo]:
+for name in [proposal, stories]:
   md = "docs/software-architect/deliverables/{name}/{name}.md"
   if not exists(md): continue
   run build-report-html.js md → temp.html
@@ -140,11 +140,7 @@ docs/software-architect/
 │   │   ├── stories.md
 │   │   ├── stories.docx
 │   │   └── stories.pdf
-│   └── todo/
-│       ├── todo.md
-│       ├── todo.docx
-│       └── todo.pdf
-└── README.md
+│   └── README.md
 ```
 
 ## Final Report
@@ -155,7 +151,6 @@ docs/software-architect/
 > |-------------|----|------|-----|
 > | Proposal | ✅ | ✅/❌ | ✅/❌ |
 > | Stories | ✅ | ✅/❌ | ✅/❌ |
-> | Work Plan | ✅ | ✅/❌ | ✅/❌ |
 >
 > Diagrams embedded: {N} images from `docs/software-architect/diagrams/`.
 > Each deliverable is in its own folder under `docs/software-architect/deliverables/`."

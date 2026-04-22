@@ -106,7 +106,7 @@ try {
     rootEntries.forEach(function (f) {
       // Check if this .md should be inside deliverables/
       const name = f.replace(/\.md$/, '');
-      if (['proposal', 'stories', 'todo'].indexOf(name) !== -1) {
+      if (['proposal', 'stories'].indexOf(name) !== -1) {
         fail('paths', name + '.md is in the root — should be in deliverables/' + name + '/' + f, path.join(docsDir, f));
         strayFiles.push(f);
       }
@@ -124,8 +124,7 @@ if (strayFiles.length === 0) {
 const deliverablesDir = path.join(docsDir, 'deliverables');
 const EXPECTED = [
   { key: 'proposal', label: 'Technical proposal' },
-  { key: 'stories', label: 'User stories' },
-  { key: 'todo', label: 'Work plan' }
+  { key: 'stories', label: 'User stories' }
 ];
 
 if (!existsDir(deliverablesDir)) {
@@ -226,31 +225,7 @@ if (storiesMd) {
 }
 
 // ---------------------------------------------------------------------------
-// 5. Todo: modules from proposal represented in work plan
-// ---------------------------------------------------------------------------
-
-const todoMd = readFileSafe(path.join(deliverablesDir, 'todo', 'todo.md'));
-if (todoMd && proposalMd) {
-  // Extract module titles from proposal: "**MODULE N: Name**" or "### Module N — Name"
-  const moduleRe = /\*\*MODULE\s+\d+\s*[:—-]\s*([^*\n]+?)\*\*|###\s+Module\s+\d+\s*[:—-]\s*(.+)/gi;
-  const modules = new Set();
-  let mm;
-  while ((mm = moduleRe.exec(proposalMd)) !== null) {
-    modules.add((mm[1] || mm[2] || '').trim().toLowerCase());
-  }
-  if (modules.size > 0) {
-    const todoLower = todoMd.toLowerCase();
-    const orphans = Array.from(modules).filter(m => m && !todoLower.includes(m.split(/\s+/).slice(0, 3).join(' ')));
-    if (orphans.length > 0) {
-      warn('todo', orphans.length + ' proposal module(s) not found in todo.md: ' + orphans.slice(0, 3).join('; '));
-    } else {
-      ok('todo', modules.size + ' proposal module(s) represented in work plan');
-    }
-  }
-}
-
-// ---------------------------------------------------------------------------
-// 6. Prototype: internal links and local images resolve
+// 5. Prototype: internal links and local images resolve
 // ---------------------------------------------------------------------------
 
 const protoDir = path.join(docsDir, 'prototype');
@@ -306,7 +281,7 @@ function walkHtml(dir) {
 }
 
 // ---------------------------------------------------------------------------
-// 7. Schema artifacts (optional)
+// 6. Schema artifacts (optional)
 // ---------------------------------------------------------------------------
 
 const schemaDir = path.join(docsDir, 'schema');
@@ -338,7 +313,7 @@ function emitReport() {
   const glyph = { ok: '✓', warn: '⚠', fail: '✗' };
   const byArea = {};
   results.forEach(r => { (byArea[r.area] = byArea[r.area] || []).push(r); });
-  const areaOrder = ['context', 'deliverables', 'diagrams', 'stories', 'todo', 'prototype', 'schema', 'paths'];
+  const areaOrder = ['context', 'deliverables', 'diagrams', 'stories', 'prototype', 'schema', 'paths'];
   console.log('architect validate — ' + path.relative(process.cwd(), docsDir));
   console.log('');
   areaOrder.forEach(area => {

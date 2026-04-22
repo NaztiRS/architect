@@ -51,7 +51,6 @@ That runs the full pipeline. Or start with a specific document:
 | `/software-architect:analyze` | Extract requirements from document or interactive Q&A |
 | `/software-architect:proposal` | Generate technical proposal |
 | `/software-architect:stories` | Generate user stories (enterprise level) |
-| `/software-architect:todo` | Work plan with Gantt chart |
 | `/software-architect:prototype` | Navigable HTML prototype |
 | `/software-architect:schema` | Inferred data model — ER diagram + reference SQL DDL |
 | `/software-architect:diagrams` | Render Mermaid diagrams as SVG/PNG |
@@ -142,8 +141,6 @@ Preflight (Node.js? Chrome? Install tools)
        |
       prototype
        |
-      todo
-       |
       schema (ER diagram + reference SQL)
        |
    export + diagrams + render
@@ -182,10 +179,6 @@ docs/software-architect/
     │   ├── stories.md
     │   ├── stories.docx
     │   └── stories.pdf
-    └── todo/
-        ├── todo.md
-        ├── todo.docx
-        └── todo.pdf
 ```
 
 ## Specialized Agents
@@ -197,7 +190,7 @@ The plugin uses 4 specialized agents, each with domain expertise defined in thei
 | `business-analyst` | Requirements expert | analyze, stories | Extracts requirements from documents or Q&A. Detects gaps and implicit assumptions. Writes acceptance criteria in Given/When/Then. Assigns MoSCoW priorities and story points. Never assumes — asks precise questions when info is missing. |
 | `solution-architect` | Architecture expert | proposal | Designs scalable architectures. Produces Mermaid diagrams. Justifies every technical decision with trade-offs. Scales complexity to the project. |
 | `ux-designer` | Prototyping expert | prototype | Maps user stories to screens. Creates navigable HTML prototypes with Tailwind CSS. Uses realistic data from the project context. Ensures responsive design and consistent styling across all pages. |
-| `project-planner` | Planning expert | todo | Decomposes projects into phases and tasks. Estimates effort realistically (with 20-30% padding). Identifies dependencies and critical path. Creates Gantt charts and prioritized checklists. |
+| `project-planner` | Planning expert | deliver | Decomposes projects into phases and tasks. Estimates effort realistically (with 20-30% padding). Identifies dependencies and critical path. Creates Gantt charts and prioritized checklists. |
 
 Agents write in the user's chosen language (English or Spanish). Technical terms always remain in English.
 

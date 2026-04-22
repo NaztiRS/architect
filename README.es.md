@@ -51,7 +51,6 @@ Corre el pipeline completo. O arranca desde un documento:
 | `/software-architect:analyze` | Extrae requisitos de un documento o Q&A interactivo |
 | `/software-architect:proposal` | Genera la propuesta técnica |
 | `/software-architect:stories` | Genera historias de usuario (nivel enterprise) |
-| `/software-architect:todo` | Plan de trabajo con Gantt |
 | `/software-architect:prototype` | Prototipo HTML navegable |
 | `/software-architect:schema` | Modelo de datos inferido — diagrama ER + SQL de referencia |
 | `/software-architect:diagrams` | Renderiza diagramas Mermaid como SVG/PNG |
@@ -142,8 +141,6 @@ Preflight (Node.js? Chrome? Instalar herramientas)
        |
       prototype
        |
-      todo
-       |
       schema (diagrama ER + SQL de referencia)
        |
    export + diagrams + render
@@ -180,10 +177,6 @@ docs/software-architect/
     │   ├── stories.md
     │   ├── stories.docx
     │   └── stories.pdf
-    └── todo/
-        ├── todo.md
-        ├── todo.docx
-        └── todo.pdf
 ```
 
 ## Agentes especializados
@@ -195,7 +188,7 @@ El plugin usa 4 agentes especializados, cada uno con expertise de dominio defini
 | `business-analyst` | Experto en requisitos | analyze, stories | Extrae requisitos de documentos o Q&A. Detecta gaps y supuestos implícitos. Escribe criterios de aceptación en Given/When/Then. Asigna prioridades MoSCoW y story points. Nunca asume — hace preguntas precisas cuando falta información. |
 | `solution-architect` | Experto en arquitectura | proposal | Diseña arquitecturas escalables. Produce diagramas Mermaid. Justifica cada decisión técnica con trade-offs. Escala la complejidad al proyecto. |
 | `ux-designer` | Experto en prototipado | prototype | Mapea historias de usuario a pantallas. Crea prototipos HTML navegables con Tailwind CSS. Usa datos realistas del contexto del proyecto. Asegura diseño responsive y estilo consistente en todas las páginas. |
-| `project-planner` | Experto en planificación | todo | Descompone proyectos en fases y tareas. Estima esfuerzo de forma realista (con 20-30% de margen). Identifica dependencias y ruta crítica. Crea diagramas Gantt y checklists priorizados. |
+| `project-planner` | Experto en planificación | deliver (Paso 4) | Descompone proyectos en fases y tareas. Estima esfuerzo de forma realista (con 20-30% de margen). Identifica dependencias y ruta crítica. Crea diagramas Gantt y checklists priorizados. |
 
 Los agentes escriben en el idioma elegido por el usuario (inglés o español). Los términos técnicos siempre permanecen en inglés.
 

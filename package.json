@@ -1,6 +1,6 @@
 {
   "name": "software-architect-plugin",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Dependencies for the software-architect Claude Code plugin",
   "private": true,
   "dependencies": {
