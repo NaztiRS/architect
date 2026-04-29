@@ -57,6 +57,7 @@ That runs the full pipeline. Or start with a specific document:
 | `/software-architect:render` | Export deliverables as PDF/DOCX |
 | `/software-architect:export` | Generate README index of deliverables |
 | `/software-architect:validate` | Static consistency check across all deliverables |
+| `/software-architect:audit` | Review an existing proposal against Architect quality standards |
 
 ### Options
 
@@ -84,10 +85,13 @@ If tools are missing, the plugin installs them and informs you. At the end, you 
 
 The plugin asks you the first question:
 
-> *"Do you have existing documentation I can work from?"*
-> - **A)** Yes — provide a file path (MD, TXT, PDF)
-> - **B)** No — start from scratch with interactive Q&A
-> - **C)** Partial document — analyze it and ask about what's missing
+> *"Let's get started."*
+> - **A)** Scan this directory for existing documentation
+> - **B)** I'll provide a document or describe the project
+> - **C)** Start from scratch — walk me through the questions
+> - **D)** Audit an existing proposal — check compliance with Architect standards
+
+If you choose **D**, the plugin generates a compliance report at `docs/software-architect/audit-report.md` instead of running the full pipeline.
 
 If you provide a document, the **solution-architect** agent extracts all requirements automatically. It calculates a completeness score — if above 85%, it only asks for confirmation. If below, it asks targeted questions one at a time about what's missing.
 
