@@ -57,6 +57,7 @@ Corre el pipeline completo. O arranca desde un documento:
 | `/software-architect:render` | Exporta entregables como PDF/DOCX |
 | `/software-architect:export` | Genera README índice de entregables |
 | `/software-architect:validate` | Chequeo estático de consistencia entre entregables |
+| `/software-architect:audit` | Revisa una propuesta existente contra los estándares de calidad de Architect |
 
 ### Opciones
 
@@ -84,10 +85,13 @@ Si faltan herramientas, el plugin las instala e informa qué instaló. Al final,
 
 El plugin te hace la primera pregunta:
 
-> *"¿Tienes documentación existente?"*
-> - **A)** Sí — proporciona la ruta al archivo (MD, TXT, PDF)
-> - **B)** No — empezamos desde cero con preguntas interactivas
-> - **C)** Documento parcial — lo analizo y pregunto lo que falta
+> *"Comencemos."*
+> - **A)** Escanear este directorio en busca de documentación existente
+> - **B)** Voy a proporcionar un documento o describir el proyecto
+> - **C)** Empezar desde cero — guíame con preguntas
+> - **D)** Auditar una propuesta existente — verificar cumplimiento con los estándares de Architect
+
+Si eliges **D**, el plugin genera un informe de cumplimiento en `docs/software-architect/audit-report.md` en lugar de ejecutar el pipeline completo.
 
 Si proporcionas un documento, el agente **solution-architect** extrae todos los requisitos automáticamente. Calcula un score de completitud — si supera el 85%, solo pide confirmación. Si no, hace preguntas dirigidas sobre lo que falta, una a la vez.
 
