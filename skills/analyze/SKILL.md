@@ -17,16 +17,47 @@ Analyze the user's project requirements and generate a complete `fa-context.json
 
 If the user did not provide arguments, start with this question BEFORE anything else:
 
-> "Welcome to **Architect**. Let's analyze your project.
+> "Welcome to **Architect**. Let's get started.
 >
-> Do you have existing documentation I can work from?
-> - **A)** Yes — I have a requirements document, spec, or brief (MD, TXT, PDF)
-> - **B)** No — let's start from scratch with questions
-> - **C)** I have a partial document — analyze it and ask me about what's missing"
+> - **A)** Scan this directory for existing documentation
+> - **B)** I'll provide a document or describe the project
+> - **C)** Start from scratch — walk me through the questions
+> - **D)** Audit an existing proposal — check compliance with Architect standards"
 
-- If **A** or **C**: Ask for the file path: "Please provide the path to your document (e.g., `docs/requirements.md`)"
-  Then proceed to **Mode 1: Document Provided**
-- If **B**: Proceed to **Mode 3: No Input (Interactive)**
+### Option A — Scan Directory
+
+1. Use Glob to find `*.md`, `*.txt`, `*.pdf` files in the project root (non-recursive).
+2. Exclude common non-requirement files: `README.md`, `CHANGELOG.md`, `LICENSE.md`, `CLAUDE.md`, `AGENTS.md`, `GEMINI.md`.
+3. If no files found:
+   > "No documentation files found in the current directory. Would you like to provide a path (B) or start from scratch (C)?"
+4. If files found, present a numbered list:
+   > "I found the following files:
+   > 1. `requirements.md`
+   > 2. `spec.pdf`
+   > 3. `brief.txt`
+   >
+   > Which file(s) should I analyze? (enter number, or 'all')"
+5. Read the selected file(s) and proceed to **Mode 1: Document Provided**.
+
+### Option B — User Provides Input
+
+Ask: "Please provide the path to your document (e.g., `docs/requirements.md`) or describe your project."
+- If a file path is given → proceed to **Mode 1: Document Provided**
+- If a text description is given → proceed to **Mode 2: Text Description Provided**
+
+### Option C — Interactive Q&A
+
+Proceed to **Mode 3: No Input (Interactive)**. No changes to this flow.
+
+### Option D — Audit Existing Proposal
+
+1. Ask: "Please provide the path to the proposal you want to audit (e.g., `docs/proposal.md`)"
+2. Read `templates/style-reference.md` from the plugin directory as the evaluation reference.
+3. Read `agents/solution-architect.md` for quality expectations.
+4. Execute the audit evaluation following `skills/audit/SKILL.md` logic.
+5. Write the report to `docs/software-architect/audit-report.md`.
+6. Display the console summary.
+7. **STOP HERE.** Do not generate `fa-context.json`. Do not continue to any other mode.
 
 ## Input Modes
 
