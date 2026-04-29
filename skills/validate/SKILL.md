@@ -1,6 +1,6 @@
 ---
 name: validate
-description: Static consistency check across all architect deliverables. Runs a deterministic Node script that reports missing formats, broken prototype links, unrendered diagrams, and schema gaps.
+description: Static consistency check across all architect deliverables. Runs a deterministic Node script that reports missing formats, broken prototype links, and unrendered diagrams.
 argument-hint: "[docs-dir] [--json] [--strict]"
 allowed-tools: "Read, Bash"
 ---
@@ -37,7 +37,6 @@ The script returns exit code `0` when there are no failures (warnings allowed un
 | **deliverables** | proposal exists in `.md` (fail if missing), `.docx`, `.pdf` (warn if missing — hint to run `/software-architect:render`) |
 | **diagrams** | Count of ```` ```mermaid ```` fences in `proposal.md` matches rendered `.png` count in `diagrams/` |
 | **prototype** | Every internal `<a href>` to an `.html` file resolves; every local `<img src>` resolves |
-| **schema** | If `schema/` exists, `.mmd` + `.sql` + `.png` are all present |
 
 ## Interpret & Respond
 
@@ -47,7 +46,6 @@ Read the script's stdout. Pass it through verbatim to the user (don't re-format 
 - Failures in **diagrams** → run `/software-architect:diagrams`
 - Failures in **prototype** (broken links) → re-run `/software-architect:prototype` or edit the HTML files manually
 - Warnings for **DOCX/PDF missing** → run `/software-architect:render`
-- Warnings for **schema incomplete** → run `/software-architect:schema`
 
 If the script exits `0` with no warnings, respond with a single line:
 

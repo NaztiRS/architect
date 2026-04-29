@@ -10,7 +10,6 @@
  *   - Diagrams referenced in proposal.md are rendered under diagrams/
  *   - Prototype internal links resolve to existing HTML files
  *   - Prototype <img> local paths resolve to existing files
- *   - Schema artifacts, if present, are consistent (SVG/PNG for every .mmd)
  *
  * Output: a human-readable report with ✓ / ⚠ / ✗ per check, grouped by area.
  * Exit code: 0 if all errors clear (warnings allowed), 1 if any ✗.
@@ -223,22 +222,6 @@ function walkHtml(dir) {
 }
 
 // ---------------------------------------------------------------------------
-// 5. Schema artifacts (optional)
-// ---------------------------------------------------------------------------
-
-const schemaDir = path.join(docsDir, 'schema');
-if (existsDir(schemaDir)) {
-  const entries = fs.readdirSync(schemaDir);
-  const hasMmd = entries.some(f => /\.mmd$/i.test(f));
-  const hasSql = entries.some(f => /\.sql$/i.test(f));
-  const hasPng = entries.some(f => /\.png$/i.test(f));
-  if (!hasMmd) warn('schema', 'schema/ exists but no .mmd file found');
-  if (!hasSql) warn('schema', 'schema/ exists but no .sql file found');
-  if (hasMmd && !hasPng) warn('schema', 'schema .mmd present but not rendered (run /software-architect:schema or /software-architect:diagrams)');
-  if (hasMmd && hasSql && hasPng) ok('schema', 'schema artifacts complete (.mmd + .sql + .png)');
-}
-
-// ---------------------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------------------
 
@@ -255,7 +238,7 @@ function emitReport() {
   const glyph = { ok: '✓', warn: '⚠', fail: '✗' };
   const byArea = {};
   results.forEach(r => { (byArea[r.area] = byArea[r.area] || []).push(r); });
-  const areaOrder = ['context', 'deliverables', 'diagrams', 'prototype', 'schema', 'paths'];
+  const areaOrder = ['context', 'deliverables', 'diagrams', 'prototype', 'paths'];
   console.log('architect validate — ' + path.relative(process.cwd(), docsDir));
   console.log('');
   areaOrder.forEach(area => {

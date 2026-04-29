@@ -14,7 +14,6 @@ Transform project requirements into enterprise-grade documentation and navigable
 |------------|----------|-------------|
 | **Technical Proposal** | Client / Direction | Architecture, risks, timeline, functional modules |
 | **HTML Prototype** | Everyone | Navigable, responsive screens built with Tailwind CSS — zero dependencies |
-| **Reference Schema** | Engineering | ER diagram + reference SQL DDL inferred from the proposal |
 
 Each deliverable is exported in **3 formats**: `.md`, `.docx`, `.pdf`
 
@@ -54,7 +53,6 @@ That runs the full pipeline. Or start with a specific document:
 | `/software-architect:analyze` | Extract requirements from document or interactive Q&A |
 | `/software-architect:proposal` | Generate technical proposal |
 | `/software-architect:prototype` | Navigable HTML prototype |
-| `/software-architect:schema` | Inferred data model — ER diagram + reference SQL DDL |
 | `/software-architect:diagrams` | Render Mermaid diagrams as SVG/PNG |
 | `/software-architect:render` | Export deliverables as PDF/DOCX |
 | `/software-architect:export` | Generate README index of deliverables |
@@ -70,7 +68,7 @@ That runs the full pipeline. Or start with a specific document:
 
 ## How the Pipeline Works
 
-The full pipeline (`/software-architect:deliver`) orchestrates the entire process in 6 steps:
+The full pipeline (`/software-architect:deliver`) orchestrates the entire process in 5 steps:
 
 ### Step 0: Preflight Check
 
@@ -109,11 +107,7 @@ A review checkpoint lets you adjust before moving on.
 
 A review checkpoint lets you adjust before moving on.
 
-### Step 4: Reference Schema
-
-The **solution-architect** agent infers the project's domain entities and relationships from the proposal's modules, and emits a Mermaid ER diagram plus a runnable PostgreSQL DDL (`schema.sql`) with primary keys, foreign keys, indexes and an "Open questions" section for the team to review.
-
-### Step 5: Export + Diagrams + Render
+### Step 4: Export + Diagrams + Render
 
 Three operations run in sequence:
 
@@ -121,7 +115,7 @@ Three operations run in sequence:
 2. **Diagrams** extracts the 2 Mermaid diagrams from the proposal (architecture + timeline) and renders them as SVG/PNG using mmdc or the mermaid.ink API
 3. **Render** converts each deliverable markdown into professional DOCX (using the `docx` npm package for native Word formatting with corporate styling) and PDF (using puppeteer with Chrome headless)
 
-### Step 6: Cleanup
+### Step 5: Cleanup
 
 If the plugin installed npm tools during preflight, it asks:
 
@@ -140,8 +134,6 @@ Preflight (Node.js? Chrome? Install tools)
        |
       prototype
        |
-      schema (ER diagram + reference SQL)
-       |
    export + diagrams + render
        |
    validate (consistency gate)
@@ -159,12 +151,6 @@ docs/software-architect/
 │   ├── architecture-overview.png
 │   ├── proposal-timeline.svg
 │   └── proposal-timeline.png
-├── schema/
-│   ├── er-diagram.mmd
-│   ├── er-diagram.svg
-│   ├── er-diagram.png
-│   ├── schema.sql
-│   └── README.md
 ├── prototype/
 │   ├── index.html
 │   ├── pages/
@@ -183,7 +169,7 @@ The plugin uses 3 specialized agents, each with domain expertise defined in thei
 | Agent | Role | Skills | What It Does |
 |-------|------|--------|-------------|
 | `business-analyst` | Requirements expert | analyze | Extracts functional and non-functional requirements from documents or interactive Q&A. Detects gaps and inconsistencies. Prioritizes with MoSCoW. |
-| `solution-architect` | Architecture expert | proposal, schema | Designs scalable architectures. Produces Mermaid diagrams. Infers reference data models. Justifies every technical decision with trade-offs. |
+| `solution-architect` | Architecture expert | proposal | Designs scalable architectures. Produces Mermaid diagrams. Justifies every technical decision with trade-offs. |
 | `ux-designer` | Prototyping expert | prototype | Maps functional modules to screens. Creates navigable HTML prototypes with Tailwind CSS. Uses realistic data from the project context. Ensures responsive design and consistent styling across all pages. |
 
 Agents write in the user's chosen language (English or Spanish). Technical terms always remain in English.

@@ -1,5 +1,5 @@
 ---
-description: Run the full pipeline — analyze, proposal, prototype, schema, diagrams and export
+description: Run the full pipeline — analyze, proposal, prototype, diagrams and export
 argument-hint: "[path-to-doc] or describe your project"
 ---
 

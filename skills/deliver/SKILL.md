@@ -17,21 +17,15 @@ Orchestrate the full architect pipeline. Generate all deliverables directly in t
 
 ```
 docs/software-architect/
-├── fa-context.json                        ← Step 1 (deleted in Step 7)
-├── README.md                              ← Step 6
+├── fa-context.json                        ← Step 1 (deleted in Step 6)
+├── README.md                              ← Step 5
 ├── prototype/
 │   └── index.html                         ← Step 3
-├── schema/
-│   ├── er-diagram.mmd                     ← Step 5
-│   ├── er-diagram.svg                     ← Step 7 (render)
-│   ├── er-diagram.png                     ← Step 7 (render)
-│   ├── schema.sql                         ← Step 5
-│   └── README.md                          ← Step 5
 ├── diagrams/
-│   ├── architecture-overview.svg          ← Step 7
-│   ├── architecture-overview.png          ← Step 7
-│   ├── proposal-timeline.svg              ← Step 7
-│   └── proposal-timeline.png              ← Step 7
+│   ├── architecture-overview.svg          ← Step 6
+│   ├── architecture-overview.png          ← Step 6
+│   ├── proposal-timeline.svg              ← Step 6
+│   └── proposal-timeline.png              ← Step 6
 └── deliverables/
     └── proposal/
         ├── proposal.md                    ← Step 2
@@ -41,9 +35,8 @@ docs/software-architect/
 
 **Rules:**
 - Step 2 must create `deliverables/proposal/` directory before writing
-- Step 4 must create `schema/` directory before writing
-- Step 7 must create `diagrams/` directory before writing
-- Steps 2, 4, 5 must verify their output files exist after writing (use Glob or Bash `ls`)
+- Step 6 must create `diagrams/` directory before writing
+- Steps 2, 4 must verify their output files exist after writing (use Glob or Bash `ls`)
 - The only `.md` files in the root of `docs/software-architect/` are `README.md` and `fa-context.json`
 
 ## Pipeline
@@ -55,15 +48,13 @@ docs/software-architect/
    ↳ verify: deliverables/proposal/proposal.md exists
 3. prototype                              (subagent)
    ↳ verify: prototype/index.html exists
-4. schema                                (direct, no subagent)
-   ↳ verify: schema/er-diagram.mmd + schema/schema.sql exist
-5. export                                (direct, no subagent)
+4. export                                (direct, no subagent)
    ↳ verify: README.md exists
-6. diagrams + render                     (direct, no subagent)
+5. diagrams + render                     (direct, no subagent)
    ↳ verify: diagrams/*.png + deliverables/*/*.pdf + deliverables/*/*.docx exist
-7. validate  → consistency gate          (runs bin/validate.js)
+6. validate  → consistency gate          (runs bin/validate.js)
    ↳ if failures: auto-fix loop (up to 2 retries)
-8. cleanup   → optionally uninstall tools
+7. cleanup   → optionally uninstall tools
 ```
 
 ## Parse Arguments
@@ -228,29 +219,15 @@ After completion:
 **Review checkpoint** (skip if `--no-review`):
 > "Would you like to review before continuing? (yes/no)"
 
-## Step 4: Schema (Direct — No Subagent)
-
-Generate the reference data model following `skills/schema/SKILL.md` logic. Reads `fa-context.json` and `proposal.md` to infer entities + relationships, and emits:
-
-- `docs/software-architect/schema/er-diagram.mmd` (Mermaid erDiagram source)
-- `docs/software-architect/schema/schema.sql` (reference DDL, PostgreSQL by default)
-- `docs/software-architect/schema/README.md` (entity notes + open questions)
-
-Rendering of the ER diagram happens in Step 6 together with the proposal diagrams (single `render-diagrams.js` pass over all `.mmd` files).
-
-Create `docs/software-architect/schema/` before writing.
-
-> "✅ **Schema generated.** {N} entities, {M} relationships — `docs/software-architect/schema/`."
-
-## Step 5: Export (Direct — No Subagent)
+## Step 4: Export (Direct — No Subagent)
 
 Consolidate deliverables directly following `skills/export/SKILL.md` logic. Simple file aggregation — no subagent needed.
 
-## Step 6: Diagrams + Render (Direct — No Subagent)
+## Step 5: Diagrams + Render (Direct — No Subagent)
 
 Run both directly in this session:
 
-1. **Diagrams:** Extract the 2 Mermaid diagrams from proposal.md plus the ER diagram from `docs/software-architect/schema/er-diagram.mmd` (if Step 4 produced one), and render them all as SVG/PNG following `skills/diagrams/SKILL.md` logic. The ER diagram renders in place — its outputs live under `docs/software-architect/schema/`.
+1. **Diagrams:** Extract the 2 Mermaid diagrams from proposal.md and render them as SVG/PNG following `skills/diagrams/SKILL.md` logic.
 2. **Render:** Generate DOCX and PDF for each deliverable independently following `skills/render/SKILL.md` logic
 
 `PUPPETEER_EXECUTABLE_PATH` must still be set in this session (from Step 0.2). Create `docs/software-architect/diagrams/` before rendering.
@@ -259,9 +236,7 @@ After rendering, verify the expected outputs in one pass:
 
 ```bash
 ls docs/software-architect/diagrams/*.png \
-   docs/software-architect/deliverables/proposal/proposal.{md,docx,pdf} \
-   docs/software-architect/schema/er-diagram.{mmd,png} \
-   docs/software-architect/schema/schema.sql 2>/dev/null
+   docs/software-architect/deliverables/proposal/proposal.{md,docx,pdf} 2>/dev/null
 ```
 
 If any are missing, report which and re-run the specific sub-step before continuing.
@@ -285,31 +260,30 @@ After completion:
 > |-------|--------|----------|
 > | HTML Prototype | ✅ | `docs/software-architect/prototype/index.html` |
 > | Diagram Images | ✅ | `docs/software-architect/diagrams/` |
-> | Data Model (ER + SQL) | ✅/❌ | `docs/software-architect/schema/` |
 > | Index | ✅ | `docs/software-architect/README.md` |
 >
 > Open `docs/software-architect/prototype/index.html` in your browser to see the prototype.
 > Read `docs/software-architect/README.md` for the full deliverables index."
 
-## Step 7: Validate + Auto-Fix Loop
+## Step 6: Validate + Auto-Fix Loop
 
 Run the built-in validator. If it finds failures, **automatically retry** the failing areas up to 2 times before reporting to the user.
 
-### 7.1 Run Validation
+### 6.1 Run Validation
 
 ```bash
 node "$CLAUDE_PLUGIN_ROOT/bin/validate.js" "docs/software-architect"
 ```
 
-Note: `fa-context.json` has already been deleted in Step 6. The validator treats a missing `fa-context.json` as a **warning**, not a failure.
+Note: `fa-context.json` has already been deleted in Step 5. The validator treats a missing `fa-context.json` as a **warning**, not a failure.
 
-### 7.2 If Exit Code 0
+### 6.2 If Exit Code 0
 
-Validation passed. Proceed to Step 8 (cleanup).
+Validation passed. Proceed to Step 7 (cleanup).
 
 > "✅ **Validation: {N} ok, {M} warnings, {K} failures.**"
 
-### 7.3 If Exit Code 1 — Auto-Fix Loop
+### 6.3 If Exit Code 1 — Auto-Fix Loop
 
 Parse the validator output to identify which areas failed. For each failing area, take corrective action:
 
@@ -319,7 +293,6 @@ Parse the validator output to identify which areas failed. For each failing area
 | `deliverables/*` .md missing | The proposal skill failed — **cannot auto-fix**, report to user |
 | `deliverables/*` .docx or .pdf missing | Re-run the render pipeline for that specific deliverable using `bin/build-report-html.js`, `bin/generate-pdf.js`, `bin/generate-docx.js` |
 | `diagrams` missing PNG/SVG | Re-run diagram rendering: extract Mermaid from `deliverables/proposal/proposal.md` and render with `bin/render-diagrams.js` or mermaid.ink fallback |
-| `schema` missing PNG | Re-run ER diagram rendering with `bin/render-diagrams.js` |
 | `prototype` broken links | Check prototype HTML and fix broken navigation links |
 
 After applying fixes, **re-run validation**:
@@ -345,7 +318,7 @@ node "$CLAUDE_PLUGIN_ROOT/bin/validate.js" "docs/software-architect"
 
 Do NOT silently skip failures. Always inform the user.
 
-## Step 8: Cleanup (Optional)
+## Step 7: Cleanup (Optional)
 
 **Only run this step if `tools_installed_by_us = true` AND `--keep-tools` was NOT passed.**
 
