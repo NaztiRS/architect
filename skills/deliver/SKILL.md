@@ -179,13 +179,21 @@ After all checks, display a single status report:
 
 Invoke the analyze skill logic directly (no subagent needed):
 - If a document path was provided, read it and pass to analyze
-- If no document, start interactive Q&A (ask if user has documentation first)
-- Wait until `fa-context.json` is generated
+- If no document, present the 4-option menu (the user may choose to scan the directory, provide input, start Q&A, or audit an existing proposal)
+- Wait until the analyze step completes
 
-After completion, inform the user:
-> "✅ **Analysis complete.** Context saved to `docs/software-architect/fa-context.json`.
-> Completeness: [X]%. [Missing items if any].
-> Next: generating technical proposal..."
+**After analyze completes, check which path was taken:**
+
+1. **If `fa-context.json` was generated** (options A, B, or C were chosen):
+   > "✅ **Analysis complete.** Context saved to `docs/software-architect/fa-context.json`.
+   > Completeness: [X]%. [Missing items if any].
+   > Next: generating technical proposal..."
+   Continue to Step 2.
+
+2. **If `fa-context.json` was NOT generated** (option D — audit was chosen):
+   The audit report has already been written to `docs/software-architect/audit-report.md`.
+   > "Audit complete. The audit report is at `docs/software-architect/audit-report.md`. No pipeline deliverables were generated — run `/software-architect:deliver` again to start a new project."
+   **STOP the pipeline.** Do not continue to Step 2 or any further step. Proceed directly to Step 7 (Cleanup) if tools were installed.
 
 ## Step 2: Proposal (Subagent)
 
